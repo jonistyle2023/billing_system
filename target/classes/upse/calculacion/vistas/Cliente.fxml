@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.ClienteController">
+   <children>
+      <VBox layoutX="14.0" layoutY="14.0" prefHeight="372.0" prefWidth="372.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+         <children>
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Datos del Cliente" />
+            <TextField fx:id="txt_cedula" promptText="Cedula/RUC" />
+            <TextField fx:id="txt_nombres" promptText="Nombres Completos" />
+            <TextArea fx:id="txt_direccion" prefHeight="80.0" prefWidth="200.0" promptText="Direccion" />
+            <TextField fx:id="txt_telefono" promptText="Telefono" />
+            <TextField fx:id="txt_correo" promptText="Correo Electronico" />
+            <CheckBox fx:id="chk_validar" mnemonicParsing="false" text="Validar" />
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Button fx:id="btn_grabar" mnemonicParsing="false" onAction="#acc_grabar" text="Grabar" />
+                  <Button fx:id="btn_cerrar" mnemonicParsing="false" onAction="#acc_cerrar" text="Cerrar" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

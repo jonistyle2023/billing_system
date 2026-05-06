@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="facturaPane" prefHeight="500.0" prefWidth="600.0" spacing="12.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.FacturaController">
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+   <children>
+      <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Datos de Factura" />
+      <HBox spacing="10.0">
+         <children>
+            <Label text="Cliente:" translateY="5.0"/>
+            <ComboBox promptText="Seleccionar Cliente" prefWidth="250.0" />
+            <Label text="Nro. Factura:" translateY="5.0"/>
+            <TextField promptText="000-000-000000000" prefWidth="150.0" />
+         </children>
+      </HBox>
+      <HBox spacing="10.0">
+         <children>
+            <ComboBox promptText="Seleccionar Producto" prefWidth="250.0" />
+            <TextField promptText="Cantidad" prefWidth="100.0" />
+            <Button mnemonicParsing="false" text="Agregar" />
+         </children>
+      </HBox>
+      <TableView prefHeight="250.0">
+         <columns>
+            <TableColumn prefWidth="120.0" text="Codigo" />
+            <TableColumn prefWidth="200.0" text="Descripcion" />
+            <TableColumn prefWidth="80.0" text="Cant." />
+            <TableColumn prefWidth="100.0" text="V. Unit." />
+            <TableColumn prefWidth="100.0" text="V. Total" />
+         </columns>
+      </TableView>
+      <VBox alignment="CENTER_RIGHT" spacing="5.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                <Label text="Subtotal: $" />
+                <Label text="0.00" prefWidth="80.0" style="-fx-font-weight: bold;" />
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                <Label text="IVA (12%): $" />
+                <Label text="0.00" prefWidth="80.0" style="-fx-font-weight: bold;" />
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                <Label text="Total: $" />
+                <Label text="0.00" prefWidth="80.0" style="-fx-font-weight: bold;" />
+            </HBox>
+         </children>
+      </VBox>
+      <HBox spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" text="Guardar Factura" />
+            <Button mnemonicParsing="false" text="Eliminar Producto" />
+            <Button mnemonicParsing="false" onAction="#acc_cerrar" text="Cerrar" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
