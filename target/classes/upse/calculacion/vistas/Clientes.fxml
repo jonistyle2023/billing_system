@@ -14,27 +14,27 @@
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
    </padding>
    <children>
-      <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Administracion de Clientes" />
+      <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="%clientes.titulo" />
       <HBox spacing="10.0">
          <children>
-            <TextField promptText="Buscar..." prefWidth="250.0" />
-            <Button mnemonicParsing="false" text="Buscar" />
-            <Button mnemonicParsing="false" onAction="#acc_nuevoCliente" text="Nuevo Cliente" />
+            <TextField promptText="%clientes.buscar" prefWidth="250.0" />
+            <Button mnemonicParsing="false" text="%clientes.btnBuscar" />
+            <Button mnemonicParsing="false" onAction="#acc_nuevoCliente" text="%clientes.btnNuevo" />
          </children>
       </HBox>
       <TableView prefHeight="250.0">
          <columns>
-            <TableColumn prefWidth="120.0" text="Cedula/RUC" />
-            <TableColumn prefWidth="200.0" text="Nombres" />
-            <TableColumn prefWidth="130.0" text="Direccion" />
-            <TableColumn prefWidth="100.0" text="Telefono" />
+            <TableColumn prefWidth="120.0" text="%clientes.colCedula" />
+            <TableColumn prefWidth="200.0" text="%clientes.colNombres" />
+            <TableColumn prefWidth="130.0" text="%clientes.colDireccion" />
+            <TableColumn prefWidth="100.0" text="%clientes.colTelefono" />
          </columns>
       </TableView>
       <HBox spacing="10.0">
          <children>
-            <Button mnemonicParsing="false" text="Modificar" />
-            <Button mnemonicParsing="false" text="Eliminar" />
-            <Button mnemonicParsing="false" onAction="#acc_cerrar" text="Cerrar" />
+            <Button mnemonicParsing="false" text="%clientes.btnModificar" />
+            <Button mnemonicParsing="false" text="%clientes.btnEliminar" />
+            <Button mnemonicParsing="false" onAction="#acc_cerrar" text="%clientes.btnCerrar" />
          </children>
       </HBox>
    </children>

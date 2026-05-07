@@ -10,13 +10,13 @@
 
 <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.LoginController">
    <children>
-      <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Login Sistema" />
-      <TextField fx:id="txt_usuario" maxWidth="200.0" promptText="Usuario" />
-      <PasswordField fx:id="txt_password" maxWidth="200.0" promptText="Contraseña" />
+      <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="%login.titulo" />
+      <TextField fx:id="txt_usuario" maxWidth="200.0" promptText="%login.usuario" />
+      <PasswordField fx:id="txt_password" maxWidth="200.0" promptText="%login.clave" />
       <HBox alignment="CENTER" spacing="10.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#acc_validar" prefWidth="100.0" text="Ingresar" />
-            <Button mnemonicParsing="false" onAction="#acc_cerrar" prefWidth="100.0" text="Cerrar" />
+            <Button mnemonicParsing="false" onAction="#acc_validar" prefWidth="100.0" text="%login.ingresar" />
+            <Button mnemonicParsing="false" onAction="#acc_cerrar" prefWidth="100.0" text="%login.cerrar" />
          </children>
       </HBox>
    </children>
