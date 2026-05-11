@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.PrincipalController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.PrincipalController">
    <children>
       <BorderPane prefHeight="400.0" prefWidth="606.0" style="-fx-background-color: #f4f263;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -49,18 +49,24 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="299.0" prefWidth="129.0">
                            <children>
-                               <Button layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#acc_abrirClientes" prefHeight="82.0" prefWidth="68.0" text="%principal.btnClientes" />
-                              <ImageView fitHeight="54.0" fitWidth="60.0" layoutX="21.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@recursos/business-people.png" />
-                                 </image>
-                              </ImageView>
-                               <Button layoutX="14.0" layoutY="109.0" mnemonicParsing="false" onAction="#acc_abrirProductos" prefHeight="82.0" prefWidth="68.0" text="%principal.btnProductos" />
-                              <ImageView fitHeight="50.0" fitWidth="53.0" layoutX="22.0" layoutY="115.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@recursos/agregar-producto.png" />
-                                 </image>
-                              </ImageView>
+                               <Button layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#acc_abrirClientes" prefHeight="82.0" prefWidth="68.0" text="%principal.btnClientes" contentDisplay="TOP">
+                                  <graphic>
+                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                         <image>
+                                            <Image url="@recursos/business-people.png" />
+                                         </image>
+                                      </ImageView>
+                                  </graphic>
+                               </Button>
+                               <Button layoutX="14.0" layoutY="109.0" mnemonicParsing="false" onAction="#acc_abrirProductos" prefHeight="82.0" prefWidth="68.0" text="%principal.btnProductos" contentDisplay="TOP">
+                                  <graphic>
+                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                         <image>
+                                            <Image url="@recursos/agregar-producto.png" />
+                                         </image>
+                                      </ImageView>
+                                  </graphic>
+                               </Button>
                            </children>
                         </AnchorPane>
                   </content>
@@ -69,7 +75,15 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                         <children>
-                            <Button layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#acc_abrirFactura" prefHeight="82.0" prefWidth="68.0" text="%principal.btnFactura" />
+                            <Button layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#acc_abrirFactura" prefHeight="82.0" prefWidth="69.0" text="%principal.btnFactura" contentDisplay="TOP">
+                               <graphic>
+                                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                     <image>
+                                        <Image url="@recursos/maquina-de-fax.png" />
+                                     </image>
+                                  </ImageView>
+                               </graphic>
+                            </Button>
                         </children>
                     </AnchorPane>
                   </content>

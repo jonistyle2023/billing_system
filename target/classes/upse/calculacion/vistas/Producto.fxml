@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="productoPane" prefHeight="400.0" prefWidth="600.0" spacing="12.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.ProductoController">
+<VBox fx:id="productoPane" prefHeight="400.0" prefWidth="600.0" spacing="12.0" styleClass="root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.ProductoController">
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
    </padding>
@@ -22,14 +22,14 @@
             <Button mnemonicParsing="false" text="%producto.btnNuevo" />
          </children>
       </HBox>
-      <TableView prefHeight="250.0">
+      <TableView prefHeight="250.0" VBox.vgrow="ALWAYS">
          <columns>
             <TableColumn prefWidth="120.0" text="%producto.colCodigo" />
             <TableColumn prefWidth="260.0" text="%producto.colDescripcion" />
             <TableColumn prefWidth="120.0" text="%producto.colPrecio" />
          </columns>
       </TableView>
-      <HBox spacing="10.0">
+      <HBox spacing="10.0" styleClass="footer-bar">
          <children>
             <Button mnemonicParsing="false" text="%producto.btnModificar" />
             <Button mnemonicParsing="false" text="%producto.btnEliminar" />

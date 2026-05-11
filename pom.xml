@@ -6,19 +6,19 @@
     <version>1.0-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>13</version>
+            <version>21</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>13</version>
+            <version>21</version>
         </dependency>
     </dependencies>
     <build>
@@ -28,13 +28,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release>
+                    <release>23</release>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.4</version>
+                <version>0.0.8</version>
                 <configuration>
                     <mainClass>upse.calculacion.controlador.App</mainClass>
                 </configuration>
@@ -59,6 +59,7 @@
                         <id>ide-debug</id>
                         <configuration>
                             <options>
+                                <!--suppress UnresolvedMavenProperty -->
                                 <option>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</option>
                             </options>
                         </configuration>
@@ -68,11 +69,16 @@
                         <id>ide-profile</id>
                         <configuration>
                             <options>
-				<option>${profiler.jvmargs.arg1}</option>
-				<option>${profiler.jvmargs.arg2}</option>
-				<option>${profiler.jvmargs.arg3}</option>
-				<option>${profiler.jvmargs.arg4}</option>
-				<option>${profiler.jvmargs.arg5}</option>
+				<!--suppress UnresolvedMavenProperty -->
+                                <option>${profiler.jvmargs.arg1}</option>
+				<!--suppress UnresolvedMavenProperty -->
+                                <option>${profiler.jvmargs.arg2}</option>
+				<!--suppress UnresolvedMavenProperty -->
+                                <option>${profiler.jvmargs.arg3}</option>
+				<!--suppress UnresolvedMavenProperty -->
+                                <option>${profiler.jvmargs.arg4}</option>
+				<!--suppress UnresolvedMavenProperty -->
+                                <option>${profiler.jvmargs.arg5}</option>
                             </options>
                         </configuration>
                     </execution>

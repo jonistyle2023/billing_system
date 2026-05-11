@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="dataPaneCliente" prefHeight="400.0" prefWidth="600.0" spacing="12.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.ClientesController">
+<VBox fx:id="dataPaneCliente" prefHeight="400.0" prefWidth="600.0" spacing="12.0" styleClass="root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.ClientesController">
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
    </padding>
@@ -22,7 +22,7 @@
             <Button mnemonicParsing="false" onAction="#acc_nuevoCliente" text="%clientes.btnNuevo" />
          </children>
       </HBox>
-      <TableView prefHeight="250.0">
+      <TableView prefHeight="250.0" VBox.vgrow="ALWAYS">
          <columns>
             <TableColumn prefWidth="120.0" text="%clientes.colCedula" />
             <TableColumn prefWidth="200.0" text="%clientes.colNombres" />
@@ -30,7 +30,7 @@
             <TableColumn prefWidth="100.0" text="%clientes.colTelefono" />
          </columns>
       </TableView>
-      <HBox spacing="10.0">
+      <HBox spacing="10.0" styleClass="footer-bar">
          <children>
             <Button mnemonicParsing="false" text="%clientes.btnModificar" />
             <Button mnemonicParsing="false" text="%clientes.btnEliminar" />

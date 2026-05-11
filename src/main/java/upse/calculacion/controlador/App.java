@@ -28,6 +28,14 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         cambiarIdioma(new Locale("es")); // Default language
         scene = new Scene(loadFXML("Login"), 640, 480);
+        
+        // Cargar hoja de estilos global
+        try {
+            scene.getStylesheets().add(App.class.getResource("/upse/calculacion/vistas/styles.css").toExternalForm());
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar la hoja de estilos: " + e.getMessage());
+        }
+
         stage.setScene(scene);
         stage.setTitle(bundle.getString("login.titulo"));
         try {
@@ -46,7 +54,7 @@ public class App extends Application {
     public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
-
+    
     public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(Mod_general.DIRVISTAS + fxml + ".fxml"));
         fxmlLoader.setResources(bundle);

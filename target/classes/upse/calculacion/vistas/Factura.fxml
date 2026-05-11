@@ -8,6 +8,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="facturaPane" prefHeight="700.0" prefWidth="852.0" spacing="12.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.FacturaController">
@@ -15,7 +17,7 @@
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
    </padding>
    <children>
-      <AnchorPane prefHeight="231.0" prefWidth="823.0" style="-fx-background-color: #80AAED;">
+      <AnchorPane prefHeight="231.0" prefWidth="823.0" styleClass="anchor-pane-header" VBox.vgrow="NEVER">
          <children>
             <Label layoutX="32.0" layoutY="26.0" text="%factura.nroFactura" />
             <TextField fx:id="txt_numFactura" layoutX="113.0" layoutY="22.0" />
@@ -34,7 +36,7 @@
             <CheckBox fx:id="chk_validar" layoutX="280.0" layoutY="60.0" mnemonicParsing="false" text="%cliente.validar" />
          </children>
       </AnchorPane>
-      <TableView prefHeight="246.0" prefWidth="823.0">
+      <TableView prefHeight="246.0" prefWidth="823.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn prefWidth="104.0" text="%factura.colCodigo" />
           <TableColumn prefWidth="165.0" text="%factura.colDescripcion" />
@@ -45,21 +47,46 @@
             <TableColumn prefWidth="94.0" text="%factura.total" />
         </columns>
       </TableView>
-      <AnchorPane prefHeight="156.0" prefWidth="825.0">
+      <HBox alignment="CENTER_RIGHT" spacing="20.0" styleClass="footer-bar" VBox.vgrow="NEVER">
          <children>
-            <TextField fx:id="txt_subtotal" layoutX="649.0" layoutY="14.0" />
-            <Label layoutX="560.0" layoutY="18.0" text="%factura.subtotal" />
-            <TextField fx:id="txt_subtotal0" layoutX="649.0" layoutY="49.0" />
-            <Label layoutX="560.0" layoutY="53.0" text="SUBTOTAL 0%:" />
-            <TextField fx:id="txt_iva" layoutX="649.0" layoutY="81.0" />
-            <Label layoutX="560.0" layoutY="85.0" text="%factura.iva" />
-            <TextField fx:id="txt_total" layoutX="649.0" layoutY="115.0" />
-            <Label layoutX="560.0" layoutY="119.0" text="%factura.total" />
-            <Button fx:id="btn_grabar" layoutX="25.0" layoutY="14.0" mnemonicParsing="false" onAction="#acc_grabar" text="%factura.btnGuardar" />
-            <Button fx:id="btn_anular" layoutX="140.0" layoutY="14.0" mnemonicParsing="false" onAction="#acc_anular" text="Anular" />
-            <Button fx:id="btn_nuevo" layoutX="210.0" layoutY="14.0" mnemonicParsing="false" onAction="#acc_nuevo" text="Nuevo" />
-            <Button fx:id="btn_cerrar" layoutX="280.0" layoutY="14.0" mnemonicParsing="false" onAction="#acc_cerrar" text="%factura.btnCerrar" />
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Button fx:id="btn_grabar" mnemonicParsing="false" onAction="#acc_grabar" text="%factura.btnGuardar" />
+                  <Button fx:id="btn_anular" mnemonicParsing="false" onAction="#acc_anular" text="Anular" />
+                  <Button fx:id="btn_nuevo" mnemonicParsing="false" onAction="#acc_nuevo" text="Nuevo" />
+                  <Button fx:id="btn_cerrar" mnemonicParsing="false" onAction="#acc_cerrar" text="%factura.btnCerrar" />
+               </children>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER_RIGHT" spacing="5.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <Label text="%factura.subtotal" />
+                        <TextField fx:id="txt_subtotal" prefWidth="120.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <Label text="SUBTOTAL 0%:" />
+                        <TextField fx:id="txt_subtotal0" prefWidth="120.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <Label text="%factura.iva" />
+                        <TextField fx:id="txt_iva" prefWidth="120.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <Label text="%factura.total" />
+                        <TextField fx:id="txt_total" prefWidth="120.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
-      </AnchorPane>
+      </HBox>
    </children>
 </VBox>
