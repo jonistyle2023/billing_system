@@ -70,6 +70,9 @@
     -fx-border-width: 1px;
     -fx-border-radius: 0;
     -fx-background-radius: 0;
+    -fx-font-size: 10px;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
 }
 .accordion .button:hover {
     -fx-background-color: #ecf0f1;
@@ -129,6 +132,33 @@
 }
 
 /* Footer / Bottom Bar */
+/* ScrollPane Styling */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+.scroll-pane .viewport {
+    -fx-background-color: #f8f8ff;
+}
+.scroll-bar {
+    -fx-background-color: #ecf0f1;
+}
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #bdc3c7;
+    -fx-background-radius: 5;
+}
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #95a5a6;
+}
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #bdc3c7;
+    -fx-background-radius: 5;
+}
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #95a5a6;
+}
+
 .footer-bar {
     -fx-background-color: #ffffff;
     -fx-border-color: #bdc3c7 transparent transparent transparent;

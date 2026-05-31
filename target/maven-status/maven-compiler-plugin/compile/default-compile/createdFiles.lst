@@ -1,6 +1,15 @@
-upse\calculacion\controlador\ProductoController.class
-module-info.class
 upse\calculacion\controlador\PrincipalController.class
+upse\calculacion\controlador\ClienteController.class
+upse\calculacion\modelo\Cliente.class
+upse\calculacion\controlador\ProductoController.class
+upse\calculacion\controlador\ClientesController.class
+upse\calculacion\modelo\Producto.class
+module-info.class
+upse\calculacion\controlador\NombreClienteController.class
 upse\calculacion\general\Mod_general.class
 upse\calculacion\controlador\App.class
+upse\calculacion\controlador\Mod_VariablesGlobales.class
+upse\calculacion\controlador\FacturaController.class
+upse\calculacion\modelo\CabeceraFactura.class
 upse\calculacion\controlador\LoginController.class
+upse\calculacion\modelo\DetFactura.class

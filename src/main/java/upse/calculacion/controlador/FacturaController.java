@@ -1,7 +1,18 @@
 package upse.calculacion.controlador;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.FloatStringConverter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,7 +20,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import upse.calculacion.modelo.Cliente;
 
@@ -31,9 +41,28 @@ public class FacturaController implements Initializable {
     @FXML
     private TextField txt_correo;
     @FXML
-    private TextField txt_direccion;
+    private javafx.scene.control.TextArea txt_direccion;
     @FXML
     private CheckBox chk_validar;
+
+    @FXML
+    private TableView<upse.calculacion.modelo.DetFactura> tblDetalles;
+    @FXML
+    private TableColumn<upse.calculacion.modelo.DetFactura, String> colCodigo;
+    @FXML
+    private TableColumn<upse.calculacion.modelo.DetFactura, String> colDescripcion;
+    @FXML
+    private TableColumn<upse.calculacion.modelo.DetFactura, Float> colCant;
+    @FXML
+    private TableColumn<upse.calculacion.modelo.DetFactura, Float> colVUnit;
+    @FXML
+    private TableColumn<upse.calculacion.modelo.DetFactura, Float> colSubtotal;
+    @FXML
+    private TableColumn<upse.calculacion.modelo.DetFactura, Boolean> colAplicaIva;
+    @FXML
+    private TableColumn<upse.calculacion.modelo.DetFactura, Float> colTotal;
+
+    private ObservableList<upse.calculacion.modelo.DetFactura> detalleList = FXCollections.observableArrayList();
 
     @FXML
     private TextField txt_subtotal;
@@ -53,9 +82,11 @@ public class FacturaController implements Initializable {
     @FXML
     private Button btn_cerrar;
 
+    private static int secuenciaFactura = 0;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicializacion del modulo de factura.
+        // Inicialización del módulo de factura.
         
         // Listener to autocompletar when focus is lost on cedula
         txt_cedula.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -63,6 +94,94 @@ public class FacturaController implements Initializable {
                 buscarYAutocompletarCliente();
             }
         });
+        
+        configurarNuevaFactura();
+
+        // Configurar la tabla de detalles
+        configurarTablaDetalles();
+    }
+
+    private void configurarTablaDetalles() {
+        // Set cell value factories
+        colCodigo.setCellValueFactory(new PropertyValueFactory<>("prod_cod"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory<>("prod_nombre"));
+        colCant.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        colVUnit.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        colSubtotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+
+        // Make editable
+        tblDetalles.setEditable(true);
+        colCodigo.setCellFactory(TextFieldTableCell.forTableColumn());
+        colDescripcion.setCellFactory(TextFieldTableCell.forTableColumn());
+        colCant.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
+        colVUnit.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
+
+        // Checkbox for aplica IVA
+        colAplicaIva.setCellFactory(tc -> new CheckBoxTableCell<upse.calculacion.modelo.DetFactura, Boolean>());
+
+        // Handlers for edit commit
+        colCant.setOnEditCommit(ev -> {
+            upse.calculacion.modelo.DetFactura df = ev.getRowValue();
+            df.setCantidad(ev.getNewValue() != null ? ev.getNewValue() : df.getCantidad());
+            df.setTotal(df.getCantidad() * df.getPrecio());
+            tblDetalles.refresh();
+            actualizarTotales();
+        });
+
+        colVUnit.setOnEditCommit(ev -> {
+            upse.calculacion.modelo.DetFactura df = ev.getRowValue();
+            df.setPrecio(ev.getNewValue() != null ? ev.getNewValue() : df.getPrecio());
+            df.setTotal(df.getCantidad() * df.getPrecio());
+            tblDetalles.refresh();
+            actualizarTotales();
+        });
+
+        // When checkbox toggled update model and totals
+        colAplicaIva.setCellValueFactory(cell -> {
+            SimpleBooleanProperty prop = new SimpleBooleanProperty(cell.getValue().isAplicaIva());
+            prop.addListener((obs, oldV, newV) -> {
+                cell.getValue().setAplicaIva(newV);
+                actualizarTotales();
+            });
+            return prop;
+        });
+
+        tblDetalles.setItems(detalleList);
+    }
+
+    private void actualizarTotales() {
+        float subtotal = 0f;
+        float subtotal0 = 0f;
+        for (upse.calculacion.modelo.DetFactura d : detalleList) {
+            if (d.isAplicaIva()) subtotal += d.getTotal(); else subtotal0 += d.getTotal();
+        }
+        float iva = subtotal * 0.12f; // asumiendo 12% IVA
+        float total = subtotal + subtotal0 + iva;
+        txt_subtotal.setText(String.format("%.2f", subtotal));
+        txt_subtotal0.setText(String.format("%.2f", subtotal0));
+        txt_iva.setText(String.format("%.2f", iva));
+        txt_total.setText(String.format("%.2f", total));
+    }
+
+    private void configurarNuevaFactura() {
+        // Formato de fecha
+        txt_fecha.setText(getFechaActualFormateada());
+        txt_fecha.setEditable(false);
+
+        // Formato de numero de factura
+        secuenciaFactura++;
+        txt_numFactura.setText(formatearNumeroFactura(secuenciaFactura));
+        txt_numFactura.setEditable(false);
+    }
+
+    private String getFechaActualFormateada() {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return LocalDate.now().format(formato);
+    }
+
+    private String formatearNumeroFactura(int numero) {
+        return String.format("001-001-%09d", numero);
     }
 
     @FXML
@@ -86,6 +205,27 @@ public class FacturaController implements Initializable {
                 txt_telefono.setText(clienteEncontrado.getTelefono());
                 txt_correo.setText(clienteEncontrado.getCorreo());
                 txt_direccion.setText(clienteEncontrado.getDireccion());
+
+                // línea editable al detalle cuando el cliente es autocompletado
+                boolean alreadyAdded = false;
+                if (!detalleList.isEmpty()) {
+                    upse.calculacion.modelo.DetFactura last = detalleList.get(detalleList.size() - 1);
+                    if (last.getProd_nombre() != null && last.getProd_nombre().equals(clienteEncontrado.getNombres())) {
+                        alreadyAdded = true;
+                    }
+                }
+                if (!alreadyAdded) {
+                    upse.calculacion.modelo.DetFactura nueva = new upse.calculacion.modelo.DetFactura("", clienteEncontrado.getNombres(), 1.0f, 0.0f, false, 0.0f);
+                    detalleList.add(nueva);
+                    tblDetalles.scrollTo(nueva);
+                    tblDetalles.getSelectionModel().select(nueva);
+                }
+                actualizarTotales();
+            } else {
+                txt_nombres.clear();
+                txt_telefono.clear();
+                txt_correo.clear();
+                txt_direccion.clear();
             }
         }
     }
@@ -130,6 +270,9 @@ public class FacturaController implements Initializable {
         // Aqui deberia ir el guardado de la cabecera y el detalle de la factura...
         
         mostrarInfo("Factura guardada correctamente y datos de cliente actualizados.");
+        
+        // Preparar para la siguiente factura
+        acc_nuevo(null);
     }
 
     @FXML
@@ -140,8 +283,6 @@ public class FacturaController implements Initializable {
     @FXML
     private void acc_nuevo(ActionEvent event) {
         // Limpiar los campos
-        txt_numFactura.clear();
-        txt_fecha.clear();
         txt_cedula.clear();
         txt_nombres.clear();
         txt_telefono.clear();
@@ -152,12 +293,15 @@ public class FacturaController implements Initializable {
         txt_subtotal0.clear();
         txt_iva.clear();
         txt_total.clear();
+        
+        // Configurar nueva fecha y número de factura
+        configurarNuevaFactura();
     }
 
     @FXML
     private void acc_cerrar(ActionEvent event) {
-        if (facturaPane != null && facturaPane.getParent() instanceof AnchorPane) {
-            ((AnchorPane) facturaPane.getParent()).getChildren().remove(facturaPane);
+        if (facturaPane != null && facturaPane.getParent() instanceof javafx.scene.layout.AnchorPane) {
+            ((javafx.scene.layout.AnchorPane) facturaPane.getParent()).getChildren().remove(facturaPane);
         }
     }
     

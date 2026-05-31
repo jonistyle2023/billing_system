@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="dataPaneCliente" prefHeight="400.0" prefWidth="600.0" spacing="12.0" styleClass="root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.ClientesController">
+<VBox fx:id="dataPaneCliente" prefHeight="400.0" prefWidth="600.0" spacing="12.0" styleClass="root" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.ClientesController">
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
    </padding>
@@ -22,14 +22,14 @@
             <Button mnemonicParsing="false" onAction="#acc_nuevoCliente" text="%clientes.btnNuevo" />
          </children>
       </HBox>
-      <TableView prefHeight="250.0" VBox.vgrow="ALWAYS">
-         <columns>
-            <TableColumn prefWidth="120.0" text="%clientes.colCedula" />
-            <TableColumn prefWidth="200.0" text="%clientes.colNombres" />
-            <TableColumn prefWidth="130.0" text="%clientes.colDireccion" />
-            <TableColumn prefWidth="100.0" text="%clientes.colTelefono" />
-         </columns>
-      </TableView>
+       <TableView fx:id="tblClientes" prefHeight="250.0" VBox.vgrow="ALWAYS">
+          <columns>
+             <TableColumn fx:id="colCedula" prefWidth="120.0" text="%clientes.colCedula" />
+             <TableColumn fx:id="colNombres" prefWidth="200.0" text="%clientes.colNombres" />
+             <TableColumn fx:id="colDireccion" prefWidth="130.0" text="%clientes.colDireccion" />
+             <TableColumn fx:id="colTelefono" prefWidth="100.0" text="%clientes.colTelefono" />
+          </columns>
+       </TableView>
       <HBox spacing="10.0" styleClass="footer-bar">
          <children>
             <Button mnemonicParsing="false" text="%clientes.btnModificar" />

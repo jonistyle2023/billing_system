@@ -1,6 +1,15 @@
 E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\LoginController.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\modelo\CabeceraFactura.java
 E:\DevProjects\IdeaProjects\calculacion\src\main\java\module-info.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\modelo\Cliente.java
 E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\ProductoController.java
-E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\general\Mod_general.java
-E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\PrincipalController.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\FacturaController.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\Mod_VariablesGlobales.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\ClientesController.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\NombreClienteController.java
 E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\App.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\modelo\DetFactura.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\modelo\Producto.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\general\Mod_general.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\ClienteController.java
+E:\DevProjects\IdeaProjects\calculacion\src\main\java\upse\calculacion\controlador\PrincipalController.java

@@ -54,7 +54,8 @@ public class PrincipalController implements Initializable {
             Node pantalla = cargarVista("Factura");
             setDataPane(pantalla);
         } catch (IOException ex) {
-            mostrarError("No se pudo abrir el modulo de facturas.");
+            ex.printStackTrace();
+            mostrarError("No se pudo abrir el modulo de facturas.\nError: " + ex.getMessage());
         }
     }
 
