@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 
 import javafx.scene.image.Image;
 import upse.calculacion.general.Mod_general;
+import upse.calculacion.modelo.Usuario;
 
 /**
  * JavaFX App
@@ -23,6 +24,7 @@ public class App extends Application {
 
     private static Scene scene;
     private static ResourceBundle bundle;
+    private static Usuario usuarioActual;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -67,6 +69,14 @@ public class App extends Application {
     
     public static ResourceBundle getBundle() {
         return bundle;
+    }
+
+    public static Usuario getUsuarioActual() {
+        return usuarioActual;
+    }
+
+    public static void setUsuarioActual(Usuario usuarioActual) {
+        App.usuarioActual = usuarioActual;
     }
 
     public static void main(String[] args) {

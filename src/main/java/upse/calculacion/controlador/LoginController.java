@@ -6,6 +6,7 @@ package upse.calculacion.controlador;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -14,6 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import upse.calculacion.Mad.Mad_seguridad;
+import upse.calculacion.modelo.Usuario;
 
 /**
  * FXML Controller class
@@ -21,6 +24,8 @@ import javafx.scene.control.TextField;
  * @author COREI9
  */
 public class LoginController implements Initializable {
+
+    private final Mad_seguridad seguridad = new Mad_seguridad();
 
     @FXML
     private TextField txt_usuario;
@@ -33,17 +38,21 @@ public class LoginController implements Initializable {
         String usuario = txt_usuario.getText() == null ? "" : txt_usuario.getText().trim();
         String clave = txt_password.getText() == null ? "" : txt_password.getText();
 
-        if (fun_validar(usuario, clave)) {
-            try {
+        try {
+            Usuario usuarioAutenticado = fun_validar(usuario, clave);
+            if (usuarioAutenticado != null) {
+                App.setUsuarioActual(usuarioAutenticado);
                 App.setRoot("Principal");
-            } catch (IOException ex) {
-                mostrarError("No se pudo cargar la vista principal.");
+                return;
             }
-            return;
-        }
 
-        txt_password.clear();
-        mostrarError("Usuario o clave incorrectos.");
+            txt_password.clear();
+            mostrarError(App.getBundle().getString("login.error.credenciales"));
+        } catch (SQLException | IllegalStateException ex) {
+            mostrarError(App.getBundle().getString("login.error.bd"));
+        } catch (IOException ex) {
+            mostrarError(App.getBundle().getString("login.error.principal"));
+        }
     }
 
     @FXML
@@ -51,8 +60,11 @@ public class LoginController implements Initializable {
         Platform.exit();
     }
     
-    public boolean fun_validar(String usuario,String clave) {
-        return "admin".equals(usuario) && "123".equals(clave);
+    public Usuario fun_validar(String usuario,String clave) throws SQLException {
+        if (usuario.isBlank() || clave.isBlank()) {
+            return null;
+        }
+        return seguridad.login(usuario, clave);
     }
     
     @Override
@@ -62,7 +74,7 @@ public class LoginController implements Initializable {
 
     private void mostrarError(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Acceso denegado");
+        alert.setTitle(App.getBundle().getString("login.error.titulo"));
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();

@@ -99,8 +99,8 @@
          <bottom>
             <AnchorPane prefHeight="39.0" prefWidth="606.0" style="-fx-background-color: #eeeeff;" BorderPane.alignment="CENTER">
                <children>
-                  <Text layoutX="14.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%principal.usuario" />
-                  <Label layoutX="65.0" layoutY="11.0" text=" Jonathan Panchana" />
+                   <Text layoutX="14.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%principal.usuario" />
+                   <Label fx:id="lbl_usuario" layoutX="65.0" layoutY="11.0" text="" />
                   <HBox alignment="CENTER_RIGHT" layoutX="380.0" layoutY="6.0" prefHeight="27.0" prefWidth="200.0" spacing="10.0" AnchorPane.rightAnchor="14.0">
                      <children>
                         <Label text="%principal.idioma" />

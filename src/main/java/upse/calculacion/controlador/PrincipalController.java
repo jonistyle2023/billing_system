@@ -19,6 +19,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import static upse.calculacion.general.Mod_general.DIRVISTAS;
+import javafx.scene.control.Label;
 
 public class PrincipalController implements Initializable {
 
@@ -27,6 +28,9 @@ public class PrincipalController implements Initializable {
 
     @FXML
     private ComboBox<String> cmb_idioma;
+
+    @FXML
+    private Label lbl_usuario;
 
     @FXML
     private void acc_abrirProductos(ActionEvent event) {
@@ -109,6 +113,10 @@ public class PrincipalController implements Initializable {
             } else {
                 cmb_idioma.getSelectionModel().select("Español");
             }
+        }
+
+        if (lbl_usuario != null && App.getUsuarioActual() != null) {
+            lbl_usuario.setText(App.getUsuarioActual().getNombres());
         }
     }
 
