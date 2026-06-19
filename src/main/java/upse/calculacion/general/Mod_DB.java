@@ -66,7 +66,7 @@ public class Mod_DB {
                     + "user=" + usuario
                     + "&" + "password=" + clave;
         } else {
-            //conecta con SQLSErver
+            //conecta con SQL Server
             servidor = "localhost";
             basedatos = "BD2026_1";
             usuario = "sa";
@@ -79,7 +79,6 @@ public class Mod_DB {
                     + "user=" + usuario + ";"
                     + "password=" + clave + ";"
                     + "encrypt=false;trustServerCertificate=true;loginTimeout=30;";
-
         }
         try {
             Class.forName(classNombre);
@@ -90,6 +89,9 @@ public class Mod_DB {
             // System.out.println("ConectarBD");
             return true;
         } catch (Exception e) {
+            System.err.println("=== ERROR DE CONEXIÓN ===");
+            System.err.println("Mensaje: " + e.getMessage());
+            System.err.println("Causa: " + e.getCause());
             e.printStackTrace();
             return false;
         }

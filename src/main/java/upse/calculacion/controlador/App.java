@@ -37,7 +37,6 @@ public class App extends Application {
         } catch (Exception e) {
             System.err.println("No se pudo cargar la hoja de estilos: " + e.getMessage());
         }
-
         stage.setScene(scene);
         stage.setTitle(bundle.getString("login.titulo"));
         try {
@@ -66,7 +65,7 @@ public class App extends Application {
     public static void cambiarIdioma(Locale locale) {
         bundle = ResourceBundle.getBundle("upse/calculacion/idiomas/mensajes", locale);
     }
-    
+
     public static ResourceBundle getBundle() {
         return bundle;
     }

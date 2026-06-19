@@ -20,8 +20,8 @@ public class Mad_seguridad {
 
     public Usuario login(String usuario, String clave) throws SQLException {
         Usuario usu = null;
-        String sql = "select usr_id, per_id, usr_usuario, usr_clave, usr_nombres, usr_estado "
-                + "from usuarios "
+        String sql = "select usr_id, per_id, usr_nombres, usr_usuario, usr_clave, usr_estado "
+                + "from dbo.Usuario "
                 + "where usr_usuario = ? "
                 + "and usr_clave = ? "
                 + "and usr_estado = 'A'";
@@ -36,7 +36,7 @@ public class Mad_seguridad {
             try (ResultSet rs = sentencia.executeQuery()) {
                 if (rs.next()) {
                     usu = new Usuario();
-                    usu.setId(rs.getInt("usr_ide"));
+                    usu.setId(rs.getInt("usr_id"));
                     usu.setPer_id(rs.getInt("per_id"));
                     usu.setUsuario(rs.getString("usr_usuario"));
                     usu.setClave(rs.getString("usr_clave"));
