@@ -17,22 +17,25 @@
       <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="%producto.titulo" />
       <HBox spacing="10.0">
          <children>
-            <TextField promptText="%producto.buscar" prefWidth="250.0" />
-            <Button mnemonicParsing="false" text="%producto.btnBuscar" />
-            <Button mnemonicParsing="false" text="%producto.btnNuevo" />
+            <TextField fx:id="txt_buscar" onAction="#acc_buscar" promptText="%producto.buscar" prefWidth="250.0" />
+            <Button mnemonicParsing="false" onAction="#acc_buscar" text="%producto.btnBuscar" />
+            <Button fx:id="btn_nuevo" mnemonicParsing="false" onAction="#acc_nuevo" text="%producto.btnNuevo" />
          </children>
       </HBox>
-      <TableView prefHeight="250.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="tblProductos" prefHeight="250.0" VBox.vgrow="ALWAYS">
          <columns>
-            <TableColumn prefWidth="120.0" text="%producto.colCodigo" />
-            <TableColumn prefWidth="260.0" text="%producto.colDescripcion" />
-            <TableColumn prefWidth="120.0" text="%producto.colPrecio" />
+            <TableColumn fx:id="colCodigo" prefWidth="120.0" text="%producto.colCodigo" />
+            <TableColumn fx:id="colDescripcion" prefWidth="260.0" text="%producto.colDescripcion" />
+            <TableColumn fx:id="colPrecio" prefWidth="120.0" text="%producto.colPrecio" />
+            <TableColumn fx:id="colPvpMenor" prefWidth="120.0" text="PVP Menor" />
+            <TableColumn fx:id="colStock" prefWidth="100.0" text="Stock" />
+            <TableColumn fx:id="colIva" prefWidth="80.0" text="IVA" />
          </columns>
       </TableView>
       <HBox spacing="10.0" styleClass="footer-bar">
          <children>
-            <Button mnemonicParsing="false" text="%producto.btnModificar" />
-            <Button mnemonicParsing="false" text="%producto.btnEliminar" />
+            <Button fx:id="btn_modificar" mnemonicParsing="false" onAction="#acc_modificar" text="%producto.btnModificar" />
+            <Button fx:id="btn_eliminar" mnemonicParsing="false" onAction="#acc_eliminar" text="%producto.btnEliminar" />
             <Button mnemonicParsing="false" onAction="#acc_volver" text="%producto.btnVolver" />
          </children>
       </HBox>

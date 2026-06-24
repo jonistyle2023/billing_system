@@ -7,7 +7,7 @@ public class CabeceraFactura {
     private String fecha;
     private String numdocumento;
     private String nombres;
-    private String dirección;
+    private String direccion;
     private String telefono;
     private String correo;
     // falta el detalle de la venta
@@ -17,12 +17,12 @@ public class CabeceraFactura {
     private float iva;
     private float total;
 
-    public CabeceraFactura(int numFactura, String fecha, String numdocumento, String nombres, String dirección, String telefono, String correo, ArrayList<DetFactura> detalleFactura, float subtotal, float subtotalcero, float iva, float total) {
+    public CabeceraFactura(int numFactura, String fecha, String numdocumento, String nombres, String direccion, String telefono, String correo, ArrayList<DetFactura> detalleFactura, float subtotal, float subtotalcero, float iva, float total) {
         this.numFactura = numFactura;
         this.fecha = fecha;
         this.numdocumento = numdocumento;
         this.nombres = nombres;
-        this.dirección = dirección;
+        this.direccion = direccion;
         this.telefono = telefono;
         this.correo = correo;
         this.detalleFactura = detalleFactura;
@@ -64,12 +64,12 @@ public class CabeceraFactura {
         this.nombres = nombres;
     }
 
-    public String getDirección() {
-        return dirección;
+    public String getDireccion() {
+        return direccion;
     }
 
-    public void setDirección(String dirección) {
-        this.dirección = dirección;
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public String getTelefono() {

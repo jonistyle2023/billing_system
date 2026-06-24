@@ -17,8 +17,8 @@
       <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="%clientes.titulo" />
       <HBox spacing="10.0">
          <children>
-            <TextField promptText="%clientes.buscar" prefWidth="250.0" />
-            <Button mnemonicParsing="false" text="%clientes.btnBuscar" />
+            <TextField fx:id="txt_buscar" onAction="#acc_buscar" promptText="%clientes.buscar" prefWidth="250.0" />
+            <Button mnemonicParsing="false" onAction="#acc_buscar" text="%clientes.btnBuscar" />
             <Button mnemonicParsing="false" onAction="#acc_nuevoCliente" text="%clientes.btnNuevo" />
          </children>
       </HBox>

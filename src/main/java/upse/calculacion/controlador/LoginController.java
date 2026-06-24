@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import upse.calculacion.Mad.Mad_seguridad;
 import upse.calculacion.modelo.Usuario;
 
@@ -43,6 +44,14 @@ public class LoginController implements Initializable {
             if (usuarioAutenticado != null) {
                 App.setUsuarioActual(usuarioAutenticado);
                 App.setRoot("Principal");
+                Stage stage = App.getStage();
+                if (stage != null) {
+                    stage.setMinWidth(780);
+                    stage.setMinHeight(540);
+                    stage.setWidth(960);
+                    stage.setHeight(660);
+                    stage.centerOnScreen();
+                }
                 return;
             }
 
@@ -60,7 +69,7 @@ public class LoginController implements Initializable {
         Platform.exit();
     }
     
-    public Usuario fun_validar(String usuario,String clave) throws SQLException {
+    private Usuario fun_validar(String usuario, String clave) throws SQLException {
         if (usuario.isBlank() || clave.isBlank()) {
             return null;
         }

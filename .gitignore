@@ -1,2 +1,6 @@
-./.idea
-GEMINI.md
+.idea/
+target/
+*.iml
+.DS_Store
+CLAUDE.md
+databaseScript.sql

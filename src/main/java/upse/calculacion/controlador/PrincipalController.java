@@ -14,12 +14,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import static upse.calculacion.general.Mod_general.DIRVISTAS;
-import javafx.scene.control.Label;
+import upse.calculacion.Mad.Mad_empresa;
+import upse.calculacion.modelo.Empresa;
 
 public class PrincipalController implements Initializable {
 
@@ -31,6 +33,15 @@ public class PrincipalController implements Initializable {
 
     @FXML
     private Label lbl_usuario;
+
+    @FXML
+    private Label lbl_empresaNombre;
+
+    @FXML
+    private Label lbl_empresaDireccion;
+
+    @FXML
+    private Label lbl_empresaTelefono;
 
     @FXML
     private void acc_abrirProductos(ActionEvent event) {
@@ -76,6 +87,14 @@ public class PrincipalController implements Initializable {
 
         try {
             App.setRoot("Login");
+            Stage stage = App.getStage();
+            if (stage != null) {
+                stage.setMinWidth(620);
+                stage.setMinHeight(440);
+                stage.setWidth(640);
+                stage.setHeight(460);
+                stage.centerOnScreen();
+            }
         } catch (IOException ex) {
             mostrarError("No se pudo volver al login.");
         }
@@ -118,6 +137,8 @@ public class PrincipalController implements Initializable {
         if (lbl_usuario != null && App.getUsuarioActual() != null) {
             lbl_usuario.setText(App.getUsuarioActual().getNombres());
         }
+
+        cargarEmpresa();
     }
 
     private void mostrarError(String mensaje) {
@@ -143,6 +164,25 @@ public class PrincipalController implements Initializable {
 
     private Node cargarVista(String nombreFxml) throws IOException {
         return App.loadFXML(nombreFxml);
+    }
+
+    private void cargarEmpresa() {
+        try {
+            Empresa empresa = new Mad_empresa().obtenerEmpresaActiva();
+            if (empresa == null) {
+                if (lbl_empresaNombre != null) lbl_empresaNombre.setText("Sin datos de empresa");
+                if (lbl_empresaDireccion != null) lbl_empresaDireccion.setText("");
+                if (lbl_empresaTelefono != null) lbl_empresaTelefono.setText("");
+                return;
+            }
+            if (lbl_empresaNombre != null) lbl_empresaNombre.setText(empresa.getNombre());
+            if (lbl_empresaDireccion != null) lbl_empresaDireccion.setText(empresa.getDireccion());
+            if (lbl_empresaTelefono != null) lbl_empresaTelefono.setText(empresa.getTelefono());
+        } catch (Exception ex) {
+            if (lbl_empresaNombre != null) lbl_empresaNombre.setText("No se pudo cargar la empresa");
+            if (lbl_empresaDireccion != null) lbl_empresaDireccion.setText(ex.getMessage());
+            if (lbl_empresaTelefono != null) lbl_empresaTelefono.setText("");
+        }
     }
     
     private void abrirModal(String nombreFxml, String titulo) {

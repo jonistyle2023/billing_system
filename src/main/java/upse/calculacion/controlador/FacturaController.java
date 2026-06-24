@@ -21,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import upse.calculacion.Mad.Mad_cliente;
 import upse.calculacion.modelo.Cliente;
 
 public class FacturaController implements Initializable {
@@ -83,21 +84,17 @@ public class FacturaController implements Initializable {
     private Button btn_cerrar;
 
     private static int secuenciaFactura = 0;
+    private final Mad_cliente madCliente = new Mad_cliente();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicialización del módulo de factura.
-        
-        // Listener to autocompletar when focus is lost on cedula
         txt_cedula.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) { // Focus lost
+            if (!newValue) {
                 buscarYAutocompletarCliente();
             }
         });
-        
-        configurarNuevaFactura();
 
-        // Configurar la tabla de detalles
+        configurarNuevaFactura();
         configurarTablaDetalles();
     }
 
@@ -108,7 +105,7 @@ public class FacturaController implements Initializable {
         colCant.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         colVUnit.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colSubtotal.setCellValueFactory(new PropertyValueFactory<>("total"));
-        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("totalConIva"));
 
         // Make editable
         tblDetalles.setEditable(true);
@@ -188,91 +185,59 @@ public class FacturaController implements Initializable {
     private void acc_buscarCliente(ActionEvent event) {
         buscarYAutocompletarCliente();
     }
-    
-    private void buscarYAutocompletarCliente() {
-        String cedulaBuscada = txt_cedula.getText();
-        if (cedulaBuscada != null && !cedulaBuscada.trim().isEmpty()) {
-            Cliente clienteEncontrado = null;
-            for (Cliente c : ClienteController.clientes) {
-                if (c.getCedula().equals(cedulaBuscada.trim())) {
-                    clienteEncontrado = c;
-                    break;
-                }
-            }
-            
-            if (clienteEncontrado != null) {
-                txt_nombres.setText(clienteEncontrado.getNombres());
-                txt_telefono.setText(clienteEncontrado.getTelefono());
-                txt_correo.setText(clienteEncontrado.getCorreo());
-                txt_direccion.setText(clienteEncontrado.getDireccion());
 
-                // línea editable al detalle cuando el cliente es autocompletado
-                boolean alreadyAdded = false;
-                if (!detalleList.isEmpty()) {
-                    upse.calculacion.modelo.DetFactura last = detalleList.get(detalleList.size() - 1);
-                    if (last.getProd_nombre() != null && last.getProd_nombre().equals(clienteEncontrado.getNombres())) {
-                        alreadyAdded = true;
-                    }
-                }
-                if (!alreadyAdded) {
-                    upse.calculacion.modelo.DetFactura nueva = new upse.calculacion.modelo.DetFactura("", clienteEncontrado.getNombres(), 1.0f, 0.0f, false, 0.0f);
-                    detalleList.add(nueva);
-                    tblDetalles.scrollTo(nueva);
-                    tblDetalles.getSelectionModel().select(nueva);
-                }
-                actualizarTotales();
+    private void buscarYAutocompletarCliente() {
+        String cedula = txt_cedula.getText();
+        if (cedula == null || cedula.trim().isEmpty()) return;
+
+        try {
+            Cliente encontrado = madCliente.buscarPorCedula(cedula.trim());
+            if (encontrado != null) {
+                txt_nombres.setText(encontrado.getNombres());
+                txt_telefono.setText(encontrado.getTelefono());
+                txt_correo.setText(encontrado.getCorreo());
+                txt_direccion.setText(encontrado.getDireccion());
             } else {
                 txt_nombres.clear();
                 txt_telefono.clear();
                 txt_correo.clear();
                 txt_direccion.clear();
             }
+        } catch (Exception e) {
+            mostrarError("No se pudo buscar el cliente: " + e.getMessage());
         }
     }
 
     @FXML
     private void acc_grabar(ActionEvent event) {
-        String cedula = txt_cedula.getText();
-        if (cedula == null || cedula.trim().isEmpty()) {
-            mostrarError("La cédula no puede estar vacía.");
-            return;
-        }
-
-        // Actualizar o crear cliente
-        Cliente clienteExistente = null;
-        for (Cliente c : ClienteController.clientes) {
-            if (c.getCedula().equals(cedula.trim())) {
-                clienteExistente = c;
-                break;
+        try {
+            String cedula = txt_cedula.getText();
+            if (cedula == null || cedula.trim().isEmpty()) {
+                mostrarError("La cédula no puede estar vacía.");
+                return;
             }
-        }
+            if (detalleList.isEmpty()) {
+                mostrarError("Debe agregar al menos un producto a la factura.");
+                return;
+            }
 
-        if (clienteExistente != null) {
-            // Actualizar datos del cliente
-            clienteExistente.setNombres(txt_nombres.getText());
-            clienteExistente.setTelefono(txt_telefono.getText());
-            clienteExistente.setCorreo(txt_correo.getText());
-            clienteExistente.setDireccion(txt_direccion.getText());
-            System.out.println("Cliente actualizado exitosamente.");
-        } else {
-            // Crear nuevo cliente
-            Cliente nuevoCliente = new Cliente(
-                cedula.trim(),
-                txt_nombres.getText(),
-                txt_direccion.getText(),
-                txt_telefono.getText(),
-                txt_correo.getText()
-            );
-            ClienteController.clientes.add(nuevoCliente);
-            System.out.println("Nuevo cliente registrado desde factura.");
+            Cliente cliente = madCliente.buscarPorCedula(cedula.trim());
+            if (cliente == null) {
+                cliente = new Cliente();
+                cliente.setCedula(cedula.trim());
+            }
+            cliente.setNombres(txt_nombres.getText());
+            cliente.setTelefono(txt_telefono.getText());
+            cliente.setCorreo(txt_correo.getText());
+            cliente.setDireccion(txt_direccion.getText());
+            madCliente.guardarCliente(cliente);
+
+            // TODO: Persistir cabecera y detalle en cab_Factura / det_Factura
+            mostrarInfo("Datos del cliente guardados.\n(Persistencia de factura en BD pendiente de implementación.)");
+            acc_nuevo(null);
+        } catch (Exception e) {
+            mostrarError("No se pudo guardar: " + e.getMessage());
         }
-        
-        // Aqui deberia ir el guardado de la cabecera y el detalle de la factura...
-        
-        mostrarInfo("Factura guardada correctamente y datos de cliente actualizados.");
-        
-        // Preparar para la siguiente factura
-        acc_nuevo(null);
     }
 
     @FXML
@@ -282,19 +247,14 @@ public class FacturaController implements Initializable {
 
     @FXML
     private void acc_nuevo(ActionEvent event) {
-        // Limpiar los campos
         txt_cedula.clear();
         txt_nombres.clear();
         txt_telefono.clear();
         txt_correo.clear();
         txt_direccion.clear();
         chk_validar.setSelected(false);
-        txt_subtotal.clear();
-        txt_subtotal0.clear();
-        txt_iva.clear();
-        txt_total.clear();
-        
-        // Configurar nueva fecha y número de factura
+        detalleList.clear();
+        actualizarTotales();
         configurarNuevaFactura();
     }
 

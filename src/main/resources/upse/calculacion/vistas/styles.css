@@ -3,7 +3,7 @@
     -fx-primary-color: #2c3e50;
     -fx-secondary-color: #3498db;
     -fx-accent-color: #e74c3c;
-    -fx-background-light: #ecf0f1;
+    -fx-background-light: #f5f6fa;
     -fx-text-dark: #2c3e50;
     -fx-text-light: #ffffff;
     -fx-font-family: "Segoe UI", "Helvetica", Arial, sans-serif;
@@ -12,20 +12,22 @@
 /* General Layout */
 .root {
     -fx-background-color: -fx-background-light;
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
 }
 
 /* MenuBar */
 .menu-bar {
     -fx-background-color: -fx-primary-color;
-    -fx-padding: 5 10 5 10;
+    -fx-padding: 4 10 4 10;
 }
 .menu-bar .label {
     -fx-text-fill: -fx-text-light;
     -fx-font-weight: bold;
+    -fx-font-size: 13px;
 }
 .menu-item .label {
     -fx-text-fill: -fx-text-dark;
+    -fx-font-size: 13px;
 }
 
 /* Accordion and TitledPane */
@@ -35,6 +37,7 @@
 .titled-pane > .title {
     -fx-background-color: -fx-primary-color;
     -fx-font-weight: bold;
+    -fx-font-size: 12px;
 }
 .titled-pane > .title > .text {
     -fx-fill: -fx-text-light;
@@ -45,38 +48,43 @@
     -fx-border-width: 0 1 1 1;
 }
 
+/* Sidebar navigation buttons (inside accordion) */
+.accordion .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-dark;
+    -fx-border-color: transparent transparent #e0e4ea transparent;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 4;
+    -fx-font-size: 11px;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-padding: 6 4 6 4;
+}
+.accordion .button:hover {
+    -fx-background-color: #e8ecf1;
+    -fx-effect: none;
+}
+.accordion .button:pressed {
+    -fx-background-color: #d5dce8;
+}
+
 /* Primary Buttons */
 .button {
     -fx-background-color: -fx-secondary-color;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 5;
-    -fx-padding: 8 15 8 15;
+    -fx-padding: 7 14 7 14;
     -fx-cursor: hand;
+    -fx-font-size: 13px;
 }
 .button:hover {
     -fx-background-color: #2980b9;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 4, 0, 0, 1);
 }
 .button:pressed {
     -fx-background-color: #1a5276;
-}
-
-/* Left Panel Big Buttons (Accordion inside TitledPane) */
-.accordion .button {
-    -fx-background-color: transparent;
-    -fx-text-fill: -fx-text-dark;
-    -fx-border-color: transparent transparent #bdc3c7 transparent;
-    -fx-border-width: 1px;
-    -fx-border-radius: 0;
-    -fx-background-radius: 0;
-    -fx-font-size: 10px;
-    -fx-text-alignment: center;
-    -fx-wrap-text: true;
-}
-.accordion .button:hover {
-    -fx-background-color: #ecf0f1;
-    -fx-effect: none;
 }
 
 /* TextFields & TextAreas */
@@ -86,10 +94,16 @@
     -fx-border-radius: 4;
     -fx-background-radius: 4;
     -fx-padding: 5 8 5 8;
+    -fx-font-size: 13px;
+    -fx-min-width: 60px;
 }
 .text-field:focused, .text-area:focused {
     -fx-border-color: -fx-secondary-color;
-    -fx-effect: dropshadow(three-pass-box, rgba(52,152,219,0.3), 5, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(52,152,219,0.25), 4, 0, 0, 0);
+}
+.text-field:disabled, .text-area:disabled {
+    -fx-background-color: #f0f3f4;
+    -fx-opacity: 1.0;
 }
 
 /* TableView */
@@ -104,68 +118,65 @@
 }
 .table-view .column-header, .table-view .filler {
     -fx-background-color: transparent;
-    -fx-size: 35px;
+    -fx-size: 32px;
 }
 .table-view .column-header .label {
     -fx-text-fill: -fx-text-light;
     -fx-font-weight: bold;
+    -fx-font-size: 12px;
 }
 .table-row-cell {
     -fx-background-color: #ffffff;
     -fx-border-color: transparent transparent #ecf0f1 transparent;
+    -fx-font-size: 12px;
 }
 .table-row-cell:odd {
     -fx-background-color: #f8f9f9;
 }
 .table-row-cell:selected {
-    -fx-background-color: rgba(52, 152, 219, 0.3);
+    -fx-background-color: rgba(52, 152, 219, 0.25);
     -fx-text-background-color: -fx-text-dark;
 }
 
-/* Top Header & Factura Container */
+/* Card / Form container */
 .anchor-pane-header {
     -fx-background-color: #ffffff;
-    -fx-border-color: #bdc3c7;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-border-color: #dde1e7;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);
 }
 
-/* Footer / Bottom Bar */
-/* ScrollPane Styling */
+/* ScrollPane */
 .scroll-pane {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-padding: 0;
 }
 .scroll-pane .viewport {
-    -fx-background-color: #f8f8ff;
+    -fx-background-color: transparent;
 }
 .scroll-bar {
     -fx-background-color: #ecf0f1;
 }
-.scroll-bar:vertical .thumb {
+.scroll-bar:vertical .thumb, .scroll-bar:horizontal .thumb {
     -fx-background-color: #bdc3c7;
     -fx-background-radius: 5;
 }
-.scroll-bar:vertical .thumb:hover {
-    -fx-background-color: #95a5a6;
-}
-.scroll-bar:horizontal .thumb {
-    -fx-background-color: #bdc3c7;
-    -fx-background-radius: 5;
-}
-.scroll-bar:horizontal .thumb:hover {
+.scroll-bar:vertical .thumb:hover, .scroll-bar:horizontal .thumb:hover {
     -fx-background-color: #95a5a6;
 }
 
+/* Footer / Action bar at bottom of panels */
 .footer-bar {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #bdc3c7 transparent transparent transparent;
-    -fx-padding: 10 15 10 15;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dde1e7 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 8 12 8 12;
 }
 
-/* Labels global */
+/* Labels */
 .label {
     -fx-text-fill: -fx-text-dark;
+    -fx-font-size: 13px;
 }

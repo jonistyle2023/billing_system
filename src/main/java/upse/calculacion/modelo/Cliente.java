@@ -7,6 +7,9 @@ public class Cliente {
     private String telefono;
     private String correo;
 
+    public Cliente() {
+    }
+
     public Cliente(String cedula, String nombres, String direccion, String telefono, String correo) {
         this.cedula = cedula;
         this.nombres = nombres;

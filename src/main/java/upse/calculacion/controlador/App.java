@@ -29,7 +29,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         cambiarIdioma(new Locale("es")); // Default language
-        scene = new Scene(loadFXML("Login"), 640, 480);
+        scene = new Scene(loadFXML("Login"), 640, 460);
         
         // Cargar hoja de estilos global
         try {
@@ -44,6 +44,8 @@ public class App extends Application {
         } catch (Exception e) {
             System.err.println("No se pudo cargar el icono: " + e.getMessage());
         }
+        stage.setMinWidth(620);
+        stage.setMinHeight(440);
         stage.setOnCloseRequest(event -> {
             if (!confirmarSalida("¿Está seguro que desea cerrar el sistema?")) {
                 event.consume();
@@ -80,6 +82,10 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public static Stage getStage() {
+        return scene != null ? (Stage) scene.getWindow() : null;
     }
 
     public static boolean confirmarSalida(String mensaje) {

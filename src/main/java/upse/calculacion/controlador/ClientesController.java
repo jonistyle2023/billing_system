@@ -14,12 +14,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import upse.calculacion.controlador.ClienteController;
+import upse.calculacion.Mad.Mad_cliente;
 import upse.calculacion.modelo.Cliente;
 import static upse.calculacion.general.Mod_general.DIRVISTAS;
 
@@ -43,7 +44,8 @@ public class ClientesController implements Initializable {
     @FXML
     private TableColumn<Cliente, String> colTelefono;
 
-    
+    @FXML
+    private TextField txt_buscar;
 
     @FXML
     private void acc_nuevoCliente(ActionEvent event) {
@@ -70,6 +72,11 @@ public class ClientesController implements Initializable {
     }
 
     @FXML
+    private void acc_buscar(ActionEvent event) {
+        buscarClientes();
+    }
+
+    @FXML
     private void acc_cerrar(ActionEvent event) {
         if (dataPaneCliente != null && dataPaneCliente.getParent() instanceof AnchorPane) {
             ((AnchorPane) dataPaneCliente.getParent()).getChildren().remove(dataPaneCliente);
@@ -89,8 +96,19 @@ public class ClientesController implements Initializable {
     }
 
     private void refreshTable() {
+        cargarTablaDesdeConsulta(false);
+    }
+
+    private void buscarClientes() {
+        cargarTablaDesdeConsulta(true);
+    }
+
+    private void cargarTablaDesdeConsulta(boolean usarFiltro) {
         try {
-            ObservableList<Cliente> data = FXCollections.observableArrayList(ClienteController.clientes);
+            String criterio = txt_buscar != null ? txt_buscar.getText() : "";
+            ObservableList<Cliente> data = usarFiltro
+                    ? new Mad_cliente().buscarClientes(criterio)
+                    : new Mad_cliente().listarClientes();
             if (tblClientes != null) {
                 tblClientes.setItems(data);
                 tblClientes.refresh();

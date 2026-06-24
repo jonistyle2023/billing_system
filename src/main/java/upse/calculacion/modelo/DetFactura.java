@@ -64,4 +64,8 @@ public class DetFactura {
     public void setTotal(float total) {
         this.total = total;
     }
+
+    public float getTotalConIva() {
+        return aplicaIva ? total * 1.12f : total;
+    }
 }
