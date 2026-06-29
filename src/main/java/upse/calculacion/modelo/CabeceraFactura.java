@@ -1,130 +1,52 @@
 package upse.calculacion.modelo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CabeceraFactura {
-    private int numFactura;
-    private String fecha;
-    private String numdocumento;
-    private String nombres;
-    private String direccion;
-    private String telefono;
-    private String correo;
-    // falta el detalle de la venta
-    private ArrayList<DetFactura> detalleFactura=new ArrayList<>();
-    private float subtotal;
-    private float subtotalcero;
-    private float iva;
-    private float total;
 
-    public CabeceraFactura(int numFactura, String fecha, String numdocumento, String nombres, String direccion, String telefono, String correo, ArrayList<DetFactura> detalleFactura, float subtotal, float subtotalcero, float iva, float total) {
-        this.numFactura = numFactura;
-        this.fecha = fecha;
-        this.numdocumento = numdocumento;
-        this.nombres = nombres;
-        this.direccion = direccion;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.detalleFactura = detalleFactura;
-        this.subtotal = subtotal;
-        this.subtotalcero = subtotalcero;
-        this.iva = iva;
-        this.total = total;
+    private String numFac;       // cab_numFac  — PK, formato 001-001-XXXXXXXXX
+    private LocalDate fecha;     // cab_fechaFac
+    private String cliId;        // cli_id (cédula/RUC del cliente)
+    private float subtotal;      // cab_subtotal  (base 15%)
+    private float baseCero;      // cab_basecero  (base 0%)
+    private float iva;           // cab_iva
+    private float total;         // cab_total
+    private String estado;       // cab_estado: 'A'=activa, 'E'=anulada
+    private int usrId;           // usr_id (usuario que emitió)
+    private List<DetFactura> detalles = new ArrayList<>();
+
+    public CabeceraFactura() {
     }
 
-    public int getNumFactura() {
-        return numFactura;
-    }
+    public String getNumFac() { return numFac; }
+    public void setNumFac(String numFac) { this.numFac = numFac; }
 
-    public void setNumFactura(int numFactura) {
-        this.numFactura = numFactura;
-    }
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 
-    public String getFecha() {
-        return fecha;
-    }
+    public String getCliId() { return cliId; }
+    public void setCliId(String cliId) { this.cliId = cliId; }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
+    public float getSubtotal() { return subtotal; }
+    public void setSubtotal(float subtotal) { this.subtotal = subtotal; }
 
-    public String getNumdocumento() {
-        return numdocumento;
-    }
+    public float getBaseCero() { return baseCero; }
+    public void setBaseCero(float baseCero) { this.baseCero = baseCero; }
 
-    public void setNumdocumento(String numdocumento) {
-        this.numdocumento = numdocumento;
-    }
+    public float getIva() { return iva; }
+    public void setIva(float iva) { this.iva = iva; }
 
-    public String getNombres() {
-        return nombres;
-    }
+    public float getTotal() { return total; }
+    public void setTotal(float total) { this.total = total; }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
-    public String getDireccion() {
-        return direccion;
-    }
+    public int getUsrId() { return usrId; }
+    public void setUsrId(int usrId) { this.usrId = usrId; }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public ArrayList<DetFactura> getDetalleFactura() {
-        return detalleFactura;
-    }
-
-    public void setDetalleFactura(ArrayList<DetFactura> detalleFactura) {
-        this.detalleFactura = detalleFactura;
-    }
-
-    public float getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(float subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public float getSubtotalcero() {
-        return subtotalcero;
-    }
-
-    public void setSubtotalcero(float subtotalcero) {
-        this.subtotalcero = subtotalcero;
-    }
-
-    public float getIva() {
-        return iva;
-    }
-
-    public void setIva(float iva) {
-        this.iva = iva;
-    }
-
-    public float getTotal() {
-        return total;
-    }
-
-    public void setTotal(float total) {
-        this.total = total;
-    }
+    public List<DetFactura> getDetalles() { return detalles; }
+    public void setDetalles(List<DetFactura> detalles) { this.detalles = detalles; }
 }

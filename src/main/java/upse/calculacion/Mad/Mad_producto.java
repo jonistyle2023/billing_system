@@ -73,6 +73,28 @@ public class Mad_producto {
         return productos;
     }
 
+    public Producto buscarPorCodigo(String codigo) throws SQLException {
+        String sql = "select prod_id, prod_cod, prod_nombre, prod_precioCompra, prod_pvpxmenor, prod_pvpxmayor, prod_stock, prod_aplicaIva, pod_imagen, prod_estado "
+                + "from dbo.Producto where prod_cod = ? and (prod_estado = 'A' or prod_estado is null)";
+
+        if (!bd.conectarBD()) {
+            throw new IllegalStateException("No se pudo conectar a la base de datos.");
+        }
+
+        try (PreparedStatement sentencia = bd.getConexion().prepareStatement(sql)) {
+            sentencia.setString(1, codigo);
+            try (ResultSet rs = sentencia.executeQuery()) {
+                if (rs.next()) {
+                    return mapearProducto(rs);
+                }
+            }
+        } finally {
+            bd.desconectarBD();
+        }
+
+        return null;
+    }
+
     public Producto obtenerPorId(int id) throws SQLException {
         String sql = "select prod_id, prod_cod, prod_nombre, prod_precioCompra, prod_pvpxmenor, prod_pvpxmayor, prod_stock, prod_aplicaIva, pod_imagen, prod_estado "
                 + "from dbo.Producto where prod_id = ?";

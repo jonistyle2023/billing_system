@@ -1,6 +1,7 @@
 package upse.calculacion.modelo;
 
 public class DetFactura {
+    private int prod_id;
     private String prod_cod;
     private String prod_nombre;
     private float cantidad;
@@ -9,6 +10,7 @@ public class DetFactura {
     private float total;
 
     public DetFactura(String prod_cod, String prod_nombre, float cantidad, float precio, boolean aplicaIva, float total) {
+        this.prod_id = 0;
         this.prod_cod = prod_cod;
         this.prod_nombre = prod_nombre;
         this.cantidad = cantidad;
@@ -16,6 +18,9 @@ public class DetFactura {
         this.aplicaIva = aplicaIva;
         this.total = total;
     }
+
+    public int getProd_id() { return prod_id; }
+    public void setProd_id(int prod_id) { this.prod_id = prod_id; }
 
     public String getProd_cod() {
         return prod_cod;
@@ -66,6 +71,6 @@ public class DetFactura {
     }
 
     public float getTotalConIva() {
-        return aplicaIva ? total * 1.12f : total;
+        return aplicaIva ? total * 1.15f : total;
     }
 }

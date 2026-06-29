@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<VBox fx:id="facturaPane" spacing="12.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.FacturaController">
+<VBox fx:id="facturaPane" spacing="12.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.FacturacionController">
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
    </padding>
@@ -51,7 +51,7 @@
 
                               <Label text="%cliente.cedula" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                               <TextField fx:id="txt_cedula" maxWidth="220.0" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#acc_buscarCliente" />
-                              <CheckBox fx:id="chk_validar" mnemonicParsing="false" text="%cliente.validar" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+                              <CheckBox fx:id="chk_validar" mnemonicParsing="false" text="%factura.chkActualizarCliente" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.columnSpan="2" />
 
                               <Label text="%cliente.nombres" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                               <TextField fx:id="txt_nombres" maxWidth="620.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
@@ -85,6 +85,7 @@
                       <TableColumn fx:id="colSubtotal" prefWidth="120.0" text="%factura.subtotal" />
                       <TableColumn fx:id="colAplicaIva" prefWidth="90.0" text="%factura.colAplicaIva" />
                       <TableColumn fx:id="colTotal" prefWidth="100.0" text="%factura.colTotal" />
+                      <TableColumn fx:id="colBuscar" prefWidth="80.0" text="" />
                     </columns>
                   </TableView>
                </children>
@@ -100,6 +101,8 @@
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
                   <Button fx:id="btn_grabar" mnemonicParsing="false" onAction="#acc_grabar" text="%factura.btnGuardar" />
+                  <Button fx:id="btn_eliminarLinea" mnemonicParsing="false" onAction="#acc_eliminarLinea" text="%factura.btnEliminarProd"
+                          style="-fx-background-color: #e74c3c;" />
                   <Button fx:id="btn_anular" mnemonicParsing="false" onAction="#acc_anular" text="%factura.btnAnular"
                           style="-fx-background-color: #e67e22;" />
                   <Button fx:id="btn_nuevo" mnemonicParsing="false" onAction="#acc_nuevo" text="%factura.btnNuevo"
