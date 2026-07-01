@@ -31,10 +31,7 @@
 
       <TableView fx:id="tblProductos" VBox.vgrow="ALWAYS">
          <columns>
-            <!-- Columna imagen: placeholder para implementación futura.
-                 Cuando se defina el almacenamiento de imágenes, actualizar
-                 la CellFactory en BuscarProductoController para mostrar ImageView. -->
-            <TableColumn fx:id="colImg" prefWidth="60.0" text="%buscarProducto.colImagen" />
+               <TableColumn fx:id="colImg" prefWidth="65.0" text="%buscarProducto.colImagen" />
             <TableColumn fx:id="colCod" prefWidth="100.0" text="%buscarProducto.colCodigo" />
             <TableColumn fx:id="colNombre" prefWidth="230.0" text="%buscarProducto.colNombre" />
             <TableColumn fx:id="colPrecio" prefWidth="90.0" text="%buscarProducto.colPrecio" />

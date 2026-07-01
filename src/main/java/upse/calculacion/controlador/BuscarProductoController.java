@@ -1,6 +1,8 @@
 package upse.calculacion.controlador;
 
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,18 +17,20 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import upse.calculacion.Mad.Mad_producto;
 import upse.calculacion.modelo.Producto;
 
 public class BuscarProductoController implements Initializable {
 
+    private static final Path CARPETA_IMAGENES = Path.of(
+            System.getenv("APPDATA"), "facturacion", "imagenes");
+
     @FXML private TextField txt_buscar;
     @FXML private TableView<Producto> tblProductos;
 
-    // Columna imagen: placeholder para implementación futura.
-    // Cuando se defina el almacenamiento (ruta local, URL, BD), reemplazar
-    // la CellFactory de colImg para mostrar un ImageView cargado desde prod.getImagen().
     @FXML private TableColumn<Producto, String> colImg;
 
     @FXML private TableColumn<Producto, String> colCod;
@@ -60,19 +64,30 @@ public class BuscarProductoController implements Initializable {
         colIva.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().isAplicaIva() ? "Sí" : "No"));
 
-        // Imagen: CellFactory vacía hasta que se defina el almacenamiento
         colImg.setCellValueFactory(new PropertyValueFactory<>("imagen"));
         colImg.setCellFactory(col -> new TableCell<>() {
+            private final ImageView iv = new ImageView();
+            {
+                iv.setFitWidth(50);
+                iv.setFitHeight(50);
+                iv.setPreserveRatio(true);
+            }
+
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(null);
-                setGraphic(null);
-                // TODO: cuando se defina storage, reemplazar por ImageView:
-                // if (!empty && item != null && !item.isBlank()) {
-                //     ImageView iv = new ImageView(new Image(item, 50, 50, true, true));
-                //     setGraphic(iv);
-                // }
+                if (empty || item == null || item.isBlank()) {
+                    setGraphic(null);
+                    return;
+                }
+                Path ruta = CARPETA_IMAGENES.resolve(item);
+                if (Files.exists(ruta)) {
+                    iv.setImage(new Image(ruta.toUri().toString(), 50, 50, true, true));
+                    setGraphic(iv);
+                } else {
+                    setGraphic(null);
+                }
             }
         });
 

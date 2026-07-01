@@ -4,20 +4,26 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="facturaPane" spacing="12.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="upse.calculacion.controlador.FacturacionController">
+<VBox fx:id="facturaPane" spacing="12.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="upse.calculacion.controlador.FacturacionController">
+   <fx:define>
+      <ToggleGroup fx:id="tgMetodoPago" />
+   </fx:define>
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
    </padding>
@@ -62,7 +68,8 @@
                               <TextField fx:id="txt_correo" maxWidth="220.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 
                               <Label text="%cliente.direccion" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                              <TextArea fx:id="txt_direccion" prefHeight="50.0" maxHeight="70.0" maxWidth="620.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" wrapText="true" />
+                              <TextArea fx:id="txt_direccion" prefHeight="50.0" maxHeight="70.0" maxWidth="620.0"
+                                        GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" wrapText="true" />
                               <Region GridPane.columnIndex="4" GridPane.rowIndex="0" GridPane.rowSpan="5" />
                            </children>
                            <padding>
@@ -77,70 +84,73 @@
                   </VBox>
 
                   <TableView fx:id="tblDetalles" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
-                    <columns>
-                      <TableColumn fx:id="colCodigo" prefWidth="100.0" text="%factura.colCodigo" />
-                      <TableColumn fx:id="colDescripcion" prefWidth="200.0" text="%factura.colDescripcion" />
-                      <TableColumn fx:id="colCant" prefWidth="70.0" text="%factura.colCant" />
-                      <TableColumn fx:id="colVUnit" prefWidth="90.0" text="%factura.colVUnit" />
-                      <TableColumn fx:id="colSubtotal" prefWidth="120.0" text="%factura.subtotal" />
-                      <TableColumn fx:id="colAplicaIva" prefWidth="90.0" text="%factura.colAplicaIva" />
-                      <TableColumn fx:id="colTotal" prefWidth="100.0" text="%factura.colTotal" />
-                      <TableColumn fx:id="colBuscar" prefWidth="80.0" text="" />
-                    </columns>
+                     <columns>
+                        <TableColumn fx:id="colCodigo"      prefWidth="100.0" text="%factura.colCodigo" />
+                        <TableColumn fx:id="colDescripcion" prefWidth="200.0" text="%factura.colDescripcion" />
+                        <TableColumn fx:id="colCant"        prefWidth="70.0"  text="%factura.colCant" />
+                        <TableColumn fx:id="colVUnit"       prefWidth="90.0"  text="%factura.colVUnit" />
+                        <TableColumn fx:id="colSubtotal"    prefWidth="120.0" text="%factura.subtotal" />
+                        <TableColumn fx:id="colAplicaIva"   prefWidth="90.0"  text="%factura.colAplicaIva" />
+                        <TableColumn fx:id="colTotal"       prefWidth="100.0" text="%factura.colTotal" />
+                        <TableColumn fx:id="colBuscar"      prefWidth="80.0"  text="" />
+                     </columns>
                   </TableView>
                </children>
-               <padding>
-                  <Insets bottom="0.0" left="0.0" right="0.0" top="0.0" />
-               </padding>
             </VBox>
          </content>
       </ScrollPane>
 
+      <!-- Sección de método de pago -->
+      <HBox spacing="14.0" alignment="CENTER_LEFT" VBox.vgrow="NEVER"
+            style="-fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 14 10 14;">
+         <Label text="%factura.pago.titulo" style="-fx-font-weight: bold;" />
+         <RadioButton fx:id="rb_efectivo"      text="%factura.pago.efectivo"      toggleGroup="$tgMetodoPago" />
+         <RadioButton fx:id="rb_tarjeta"       text="%factura.pago.tarjeta"       toggleGroup="$tgMetodoPago" />
+         <RadioButton fx:id="rb_transferencia" text="%factura.pago.transferencia" toggleGroup="$tgMetodoPago" />
+         <Region HBox.hgrow="ALWAYS" />
+         <Label text="%factura.pago.montoRecibido" />
+         <TextField fx:id="txt_montoRecibido" prefWidth="100.0" disable="true"
+                    promptText="0.00" />
+         <Label text="%factura.pago.cambio" />
+         <Label fx:id="lbl_cambio" text="0.00" minWidth="70.0"
+                style="-fx-font-weight: bold;" />
+      </HBox>
+
+      <!-- Barra inferior: botones + totales -->
       <HBox alignment="CENTER_RIGHT" spacing="20.0" VBox.vgrow="NEVER">
          <children>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <Button fx:id="btn_grabar" mnemonicParsing="false" onAction="#acc_grabar" text="%factura.btnGuardar" />
+                  <Button fx:id="btn_grabar"       mnemonicParsing="false" onAction="#acc_grabar"       text="%factura.btnGuardar" />
                   <Button fx:id="btn_eliminarLinea" mnemonicParsing="false" onAction="#acc_eliminarLinea" text="%factura.btnEliminarProd"
                           style="-fx-background-color: #e74c3c;" />
-                  <Button fx:id="btn_anular" mnemonicParsing="false" onAction="#acc_anular" text="%factura.btnAnular"
+                  <Button fx:id="btn_anular"       mnemonicParsing="false" onAction="#acc_anular"       text="%factura.btnAnular"
                           style="-fx-background-color: #e67e22;" />
-                  <Button fx:id="btn_nuevo" mnemonicParsing="false" onAction="#acc_nuevo" text="%factura.btnNuevo"
+                  <Button fx:id="btn_nuevo"        mnemonicParsing="false" onAction="#acc_nuevo"        text="%factura.btnNuevo"
                           style="-fx-background-color: #27ae60;" />
-                  <Button fx:id="btn_cerrar" mnemonicParsing="false" onAction="#acc_cerrar" text="%factura.btnCerrar" />
+                  <Button fx:id="btn_cerrar"       mnemonicParsing="false" onAction="#acc_cerrar"       text="%factura.btnCerrar" />
                </children>
             </HBox>
             <Region HBox.hgrow="ALWAYS" />
             <VBox alignment="CENTER_RIGHT" spacing="5.0">
                <children>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                     <children>
-                        <Label text="%factura.subtotal" minWidth="120.0" />
-                        <TextField fx:id="txt_subtotal" prefWidth="100.0" maxWidth="150.0" />
-                     </children>
+                     <Label text="%factura.subtotal" minWidth="120.0" />
+                     <TextField fx:id="txt_subtotal" prefWidth="100.0" maxWidth="150.0" />
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                     <children>
-                        <Label text="%factura.subtotal0" minWidth="120.0" />
-                        <TextField fx:id="txt_subtotal0" prefWidth="100.0" maxWidth="150.0" />
-                     </children>
+                     <Label text="%factura.subtotal0" minWidth="120.0" />
+                     <TextField fx:id="txt_subtotal0" prefWidth="100.0" maxWidth="150.0" />
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                     <children>
-                        <Label text="%factura.iva" minWidth="120.0" />
-                        <TextField fx:id="txt_iva" prefWidth="100.0" maxWidth="150.0" />
-                     </children>
+                     <Label text="%factura.iva" minWidth="120.0" />
+                     <TextField fx:id="txt_iva" prefWidth="100.0" maxWidth="150.0" />
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                     <children>
-                        <Label text="%factura.total" minWidth="120.0" />
-                        <TextField fx:id="txt_total" prefWidth="100.0" maxWidth="150.0" />
-                     </children>
+                     <Label text="%factura.total" minWidth="120.0" />
+                     <TextField fx:id="txt_total" prefWidth="100.0" maxWidth="150.0" />
                   </HBox>
                </children>
-               <padding>
-                  <Insets bottom="0.0" left="0.0" right="0.0" top="0.0" />
-               </padding>
             </VBox>
          </children>
          <padding>

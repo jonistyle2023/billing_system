@@ -5,9 +5,11 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox spacing="14.0" styleClass="root" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
@@ -35,8 +37,25 @@
             <TextField fx:id="txt_pvpMayor" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="%productoForm.stock" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <TextField fx:id="txt_stock" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label text="%productoForm.imagen" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-            <TextField fx:id="txt_imagen" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+            <Label text="%productoForm.imagen" GridPane.columnIndex="0" GridPane.rowIndex="6"
+                   GridPane.valignment="TOP" />
+            <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <StackPane prefWidth="120.0" prefHeight="120.0"
+                          style="-fx-border-color: #cccccc; -fx-border-width: 1; -fx-background-color: #f5f5f5;">
+                  <ImageView fx:id="imgPreview" fitWidth="118.0" fitHeight="118.0" preserveRatio="true" />
+               </StackPane>
+               <HBox spacing="6.0">
+                  <Button text="%productoForm.seleccionarImagen" onAction="#acc_seleccionarImagen" />
+                  <Button fx:id="btn_quitarImagen" text="%productoForm.quitarImagen"
+                          onAction="#acc_quitarImagen"
+                          style="-fx-background-color: #e74c3c; -fx-text-fill: white;"
+                          visible="false" managed="false" />
+               </HBox>
+               <Label fx:id="lbl_nombreImagen" text=""
+                      style="-fx-font-size: 11px; -fx-text-fill: #888888;" />
+            </VBox>
+
             <CheckBox fx:id="chk_iva" text="%productoForm.iva" GridPane.columnIndex="1" GridPane.rowIndex="7" />
          </children>
       </GridPane>

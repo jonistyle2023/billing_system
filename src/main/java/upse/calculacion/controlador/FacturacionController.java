@@ -24,16 +24,21 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.util.Locale;
 import javafx.util.converter.FloatStringConverter;
 import upse.calculacion.Mad.Mad_cliente;
 import upse.calculacion.Mad.Mad_factura;
@@ -70,6 +75,14 @@ public class FacturacionController implements Initializable {
     @FXML private TextField txt_iva;
     @FXML private TextField txt_total;
 
+    // Pago
+    @FXML private ToggleGroup tgMetodoPago;
+    @FXML private RadioButton rb_efectivo;
+    @FXML private RadioButton rb_tarjeta;
+    @FXML private RadioButton rb_transferencia;
+    @FXML private TextField   txt_montoRecibido;
+    @FXML private Label       lbl_cambio;
+
     @FXML private Button btn_grabar;
     @FXML private Button btn_anular;
     @FXML private Button btn_nuevo;
@@ -81,18 +94,74 @@ public class FacturacionController implements Initializable {
     private final Mad_producto madProducto = new Mad_producto();
     private final Mad_factura  madFactura  = new Mad_factura();
 
-    // null = formulario sin emitir; non-null = número de la factura ya emitida
     private String numFacturaEmitida = null;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarNuevaFactura();
         configurarTablaDetalles();
+        configurarPago();
         agregarFilaVacia();
 
         txt_cedula.focusedProperty().addListener((obs, oldV, newV) -> {
             if (!newV) buscarYAutocompletarCliente();
         });
+    }
+
+    // ─── Pago ─────────────────────────────────────────────────────────────
+
+    private void configurarPago() {
+        tgMetodoPago.selectedToggleProperty().addListener((obs, oldT, newT) -> {
+            boolean esEfectivo = newT == rb_efectivo;
+            txt_montoRecibido.setDisable(!esEfectivo);
+            if (!esEfectivo) {
+                txt_montoRecibido.clear();
+                lbl_cambio.setText("0.00");
+                lbl_cambio.setStyle("-fx-font-weight: bold;");
+            } else {
+                calcularCambio();
+            }
+        });
+
+        txt_montoRecibido.textProperty().addListener((obs, oldV, newV) -> calcularCambio());
+    }
+
+    private void calcularCambio() {
+        if (tgMetodoPago.getSelectedToggle() != rb_efectivo) return;
+        String montoStr = txt_montoRecibido.getText().trim();
+        if (montoStr.isEmpty()) {
+            lbl_cambio.setText("0.00");
+            lbl_cambio.setStyle("-fx-font-weight: bold;");
+            return;
+        }
+        try {
+            float total  = Float.parseFloat(txt_total.getText().trim());
+            float monto  = Float.parseFloat(montoStr);
+            float cambio = monto - total;
+            lbl_cambio.setText(String.format(Locale.US, "%.2f", cambio));
+            lbl_cambio.setStyle(cambio < 0
+                    ? "-fx-font-weight: bold; -fx-text-fill: #e74c3c;"
+                    : "-fx-font-weight: bold; -fx-text-fill: #27ae60;");
+        } catch (NumberFormatException e) {
+            lbl_cambio.setText("0.00");
+            lbl_cambio.setStyle("-fx-font-weight: bold;");
+        }
+    }
+
+    private String getMetodoPago() {
+        Toggle sel = tgMetodoPago.getSelectedToggle();
+        if (sel == rb_efectivo)      return "EFECTIVO";
+        if (sel == rb_tarjeta)       return "TARJETA";
+        if (sel == rb_transferencia) return "TRANSFERENCIA";
+        return null;
+    }
+
+    private void resetearPago() {
+        tgMetodoPago.selectToggle(null);
+        txt_montoRecibido.clear();
+        txt_montoRecibido.setDisable(true);
+        lbl_cambio.setText("0.00");
+        lbl_cambio.setStyle("-fx-font-weight: bold;");
     }
 
     // ─── Tabla de detalles ────────────────────────────────────────────────
@@ -258,12 +327,13 @@ public class FacturacionController implements Initializable {
             if (d.isAplicaIva()) subtotal += d.getTotal();
             else subtotal0 += d.getTotal();
         }
-        float iva = subtotal * 0.15f;
+        float iva   = subtotal * 0.15f;
         float total = subtotal + subtotal0 + iva;
-        txt_subtotal.setText(String.format("%.2f", subtotal));
-        txt_subtotal0.setText(String.format("%.2f", subtotal0));
-        txt_iva.setText(String.format("%.2f", iva));
-        txt_total.setText(String.format("%.2f", total));
+        txt_subtotal.setText(String.format(Locale.US, "%.2f", subtotal));
+        txt_subtotal0.setText(String.format(Locale.US, "%.2f", subtotal0));
+        txt_iva.setText(String.format(Locale.US, "%.2f", iva));
+        txt_total.setText(String.format(Locale.US, "%.2f", total));
+        calcularCambio();
     }
 
     // ─── Cliente ──────────────────────────────────────────────────────────
@@ -342,7 +412,7 @@ public class FacturacionController implements Initializable {
 
     private boolean hayDatosSinEmitir() {
         if (numFacturaEmitida != null) return false;
-        boolean tieneCedula = txt_cedula.getText() != null && !txt_cedula.getText().trim().isEmpty();
+        boolean tieneCedula    = txt_cedula.getText() != null && !txt_cedula.getText().trim().isEmpty();
         boolean tieneProductos = detalleList.stream()
                 .anyMatch(d -> d.getProd_cod() != null && !d.getProd_cod().isEmpty());
         return tieneCedula || tieneProductos;
@@ -350,12 +420,14 @@ public class FacturacionController implements Initializable {
 
     @FXML
     private void acc_grabar(ActionEvent event) {
+        // ── Validar cliente ───────────────────────────────────────────────
         String cedula = txt_cedula.getText() == null ? "" : txt_cedula.getText().trim();
         if (cedula.isEmpty()) {
             mostrarError("La cédula del cliente no puede estar vacía.");
             return;
         }
 
+        // ── Validar productos ─────────────────────────────────────────────
         List<DetFactura> lineasValidas = detalleList.stream()
                 .filter(d -> d.getProd_cod() != null && !d.getProd_cod().isEmpty())
                 .collect(Collectors.toList());
@@ -364,8 +436,53 @@ public class FacturacionController implements Initializable {
             return;
         }
 
+        // ── Validar método de pago ────────────────────────────────────────
+        String metodo = getMetodoPago();
+        if (metodo == null) {
+            mostrarError("Seleccione un método de pago antes de emitir la factura.");
+            return;
+        }
+
+        float totalFactura;
         try {
-            // ── 0. Validar stock disponible antes de cualquier otra operación ──
+            totalFactura = Float.parseFloat(txt_total.getText().trim());
+        } catch (NumberFormatException e) {
+            mostrarError("Error al leer el total de la factura.");
+            return;
+        }
+
+        float pagoMonto;
+        float pagoCambio;
+
+        if ("EFECTIVO".equals(metodo)) {
+            String montoStr = txt_montoRecibido.getText().trim();
+            if (montoStr.isEmpty()) {
+                mostrarError("Ingrese el monto recibido en efectivo.");
+                txt_montoRecibido.requestFocus();
+                return;
+            }
+            try {
+                pagoMonto = Float.parseFloat(montoStr);
+            } catch (NumberFormatException e) {
+                mostrarError("El monto recibido no es un número válido.");
+                txt_montoRecibido.requestFocus();
+                return;
+            }
+            if (pagoMonto < totalFactura) {
+                mostrarError(String.format(Locale.US,
+                        "El monto recibido ($ %.2f) es menor al total de la factura ($ %.2f).",
+                        pagoMonto, totalFactura));
+                txt_montoRecibido.requestFocus();
+                return;
+            }
+            pagoCambio = pagoMonto - totalFactura;
+        } else {
+            pagoMonto  = totalFactura;
+            pagoCambio = 0f;
+        }
+
+        try {
+            // ── Validar stock ─────────────────────────────────────────────
             List<String> sinStock = new ArrayList<>();
             for (DetFactura det : lineasValidas) {
                 Producto p = madProducto.buscarPorCodigo(det.getProd_cod());
@@ -382,12 +499,11 @@ public class FacturacionController implements Initializable {
                 return;
             }
 
-            // ── 1. Detectar explícitamente si el cliente existe en BD ──────────
+            // ── Gestionar cliente ─────────────────────────────────────────
             Cliente clienteEnBD = madCliente.buscarPorCedula(cedula);
             boolean esNuevo = clienteEnBD == null;
 
             if (esNuevo) {
-                // Cliente nuevo: nombre obligatorio para poder registrarlo
                 String nombres = txt_nombres.getText() == null ? "" : txt_nombres.getText().trim();
                 if (nombres.isEmpty()) {
                     mostrarError("El cliente con cédula \"" + cedula + "\" no está registrado.\n"
@@ -395,14 +511,12 @@ public class FacturacionController implements Initializable {
                     txt_nombres.requestFocus();
                     return;
                 }
-                // Confirmar creación del nuevo cliente
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                 confirm.setTitle("Nuevo Cliente");
                 confirm.setHeaderText(null);
                 confirm.setContentText(
-                        "El cliente con cédula \"" + cedula + "\" no está registrado en el sistema.\n"
-                        + "Se creará un nuevo registro con los datos ingresados.\n\n"
-                        + "¿Desea continuar?");
+                        "El cliente con cédula \"" + cedula + "\" no está registrado.\n"
+                        + "Se creará un nuevo registro con los datos ingresados.\n\n¿Desea continuar?");
                 Optional<ButtonType> respuesta = confirm.showAndWait();
                 if (respuesta.isEmpty() || respuesta.get() != ButtonType.OK) return;
 
@@ -415,7 +529,6 @@ public class FacturacionController implements Initializable {
                 madCliente.guardarCliente(nuevo);
 
             } else if (chk_validar.isSelected()) {
-                // Cliente existente + "Actualizar datos" marcado → actualizar en BD
                 String nombres = txt_nombres.getText() == null ? "" : txt_nombres.getText().trim();
                 if (nombres.isEmpty()) {
                     mostrarError("El campo Nombres no puede quedar vacío al actualizar el cliente.");
@@ -428,9 +541,8 @@ public class FacturacionController implements Initializable {
                 clienteEnBD.setDireccion(txt_direccion.getText());
                 madCliente.guardarCliente(clienteEnBD);
             }
-            // Cliente existente + checkbox desmarcado → solo se usa la cédula para la FK; no se toca BD de clientes.
 
-            // ── 2. Calcular totales ───────────────────────────────────────────
+            // ── Calcular totales ──────────────────────────────────────────
             float subtotal = 0f, baseCero = 0f;
             for (DetFactura d : lineasValidas) {
                 if (d.isAplicaIva()) subtotal += d.getTotal();
@@ -439,19 +551,27 @@ public class FacturacionController implements Initializable {
             float iva   = subtotal * 0.15f;
             float total = subtotal + baseCero + iva;
 
-            // ── 3. Emitir: genera número + persiste en una sola transacción ──
+            // ── Emitir ────────────────────────────────────────────────────
             int usrId = App.getUsuarioActual() != null ? App.getUsuarioActual().getId() : 0;
             String numFac = madFactura.emitirFactura(
                     cedula, LocalDate.now(),
                     subtotal, baseCero, iva, total,
-                    usrId, lineasValidas);
+                    usrId, lineasValidas,
+                    metodo, pagoMonto, pagoCambio);
 
             numFacturaEmitida = numFac;
             txt_numFactura.setText(numFac);
             actualizarEstadoBotones();
 
-            String infoCliente = esNuevo ? "Cliente registrado. " : (chk_validar.isSelected() ? "Datos del cliente actualizados. " : "");
-            mostrarInfo(infoCliente + "Factura emitida correctamente.\nNro.: " + numFac);
+            String infoCliente = esNuevo
+                    ? "Cliente registrado. "
+                    : (chk_validar.isSelected() ? "Datos del cliente actualizados. " : "");
+
+            String infoPago = "EFECTIVO".equals(metodo)
+                    ? String.format(Locale.US, "\nPago: Efectivo  |  Recibido: $ %.2f  |  Cambio: $ %.2f", pagoMonto, pagoCambio)
+                    : "\nPago: " + metodo;
+
+            mostrarInfo(infoCliente + "Factura emitida correctamente.\nNro.: " + numFac + infoPago);
 
         } catch (Exception e) {
             mostrarError("No se pudo emitir la factura: " + e.getMessage());
@@ -467,7 +587,7 @@ public class FacturacionController implements Initializable {
         confirm.setHeaderText(null);
         confirm.setContentText(
                 "¿Está seguro de anular la factura " + numFacturaEmitida + "?\n"
-                + "Esta acción registra la anulación en la base de datos y no se puede deshacer.");
+                + "Esta acción registra la anulación y no se puede deshacer.");
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isEmpty() || result.get() != ButtonType.OK) return;
 
@@ -521,6 +641,7 @@ public class FacturacionController implements Initializable {
         detalleList.clear();
         agregarFilaVacia();
         actualizarTotales();
+        resetearPago();
         configurarNuevaFactura();
         txt_cedula.requestFocus();
     }

@@ -151,6 +151,7 @@ public class ProductoController implements Initializable {
     private void abrirFormulario(Producto producto) {
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource(DIRVISTAS + "ProductoForm.fxml"));
+            loader.setResources(App.getBundle());
             Parent root = loader.load();
             ProductoFormController controller = loader.getController();
             controller.setProducto(producto);
