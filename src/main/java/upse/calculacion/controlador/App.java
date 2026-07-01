@@ -14,7 +14,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.scene.image.Image;
+import upse.calculacion.Mad.Mad_parametro;
 import upse.calculacion.general.Mod_general;
+import upse.calculacion.general.Mod_VariablesGlobales;
 import upse.calculacion.modelo.Usuario;
 
 /**
@@ -29,6 +31,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         cambiarIdioma(new Locale("es")); // Default language
+        cargarParametrosGenerales();
         scene = new Scene(loadFXML("Login"), 640, 460);
         
         // Cargar hoja de estilos global
@@ -66,6 +69,16 @@ public class App extends Application {
 
     public static void cambiarIdioma(Locale locale) {
         bundle = ResourceBundle.getBundle("upse/calculacion/idiomas/mensajes", locale);
+    }
+
+    /** Carga parámetros configurables (ej. IVA) desde dbo.ParametroGeneral. Si la BD no responde, se mantienen los valores por defecto. */
+    private static void cargarParametrosGenerales() {
+        try {
+            Mod_VariablesGlobales.porcentajeIva =
+                    new Mad_parametro().obtenerValorNumerico("IVA", Mod_VariablesGlobales.porcentajeIva);
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar el parámetro IVA, se usará el valor por defecto: " + e.getMessage());
+        }
     }
 
     public static ResourceBundle getBundle() {

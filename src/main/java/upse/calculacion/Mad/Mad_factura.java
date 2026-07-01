@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import upse.calculacion.general.Mod_DB;
+import upse.calculacion.general.Mod_VariablesGlobales;
 import upse.calculacion.modelo.DetFactura;
 
 public class Mad_factura {
@@ -103,7 +104,7 @@ public class Mad_factura {
                     ps.setString(3, det.getProd_nombre());
                     ps.setFloat(4, det.getCantidad());
                     ps.setFloat(5, det.getPrecio());
-                    ps.setFloat(6, det.isAplicaIva() ? det.getTotal() * 0.15f : 0f);
+                    ps.setFloat(6, det.isAplicaIva() ? det.getTotal() * Mod_VariablesGlobales.getTasaIva() : 0f);
                     ps.setFloat(7, det.getTotal());
                     ps.executeUpdate();
                 }

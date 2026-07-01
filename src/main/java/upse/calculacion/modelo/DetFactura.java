@@ -1,5 +1,7 @@
 package upse.calculacion.modelo;
 
+import upse.calculacion.general.Mod_VariablesGlobales;
+
 public class DetFactura {
     private int prod_id;
     private String prod_cod;
@@ -71,6 +73,6 @@ public class DetFactura {
     }
 
     public float getTotalConIva() {
-        return aplicaIva ? total * 1.15f : total;
+        return aplicaIva ? total * (1f + Mod_VariablesGlobales.getTasaIva()) : total;
     }
 }

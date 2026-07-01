@@ -43,6 +43,7 @@ import javafx.util.converter.FloatStringConverter;
 import upse.calculacion.Mad.Mad_cliente;
 import upse.calculacion.Mad.Mad_factura;
 import upse.calculacion.Mad.Mad_producto;
+import upse.calculacion.general.Mod_VariablesGlobales;
 import upse.calculacion.modelo.Cliente;
 import upse.calculacion.modelo.DetFactura;
 import upse.calculacion.modelo.Producto;
@@ -327,7 +328,7 @@ public class FacturacionController implements Initializable {
             if (d.isAplicaIva()) subtotal += d.getTotal();
             else subtotal0 += d.getTotal();
         }
-        float iva   = subtotal * 0.15f;
+        float iva   = subtotal * Mod_VariablesGlobales.getTasaIva();
         float total = subtotal + subtotal0 + iva;
         txt_subtotal.setText(String.format(Locale.US, "%.2f", subtotal));
         txt_subtotal0.setText(String.format(Locale.US, "%.2f", subtotal0));
@@ -548,7 +549,7 @@ public class FacturacionController implements Initializable {
                 if (d.isAplicaIva()) subtotal += d.getTotal();
                 else baseCero += d.getTotal();
             }
-            float iva   = subtotal * 0.15f;
+            float iva   = subtotal * Mod_VariablesGlobales.getTasaIva();
             float total = subtotal + baseCero + iva;
 
             // ── Emitir ────────────────────────────────────────────────────
