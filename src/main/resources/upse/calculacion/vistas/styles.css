@@ -138,6 +138,36 @@
     -fx-text-background-color: -fx-text-dark;
 }
 
+/* TabPane (navegacion principal) */
+.tab-pane {
+    -fx-open-tab-animation: NONE;
+    -fx-close-tab-animation: NONE;
+}
+.tab-pane > .tab-header-area {
+    -fx-padding: 6 0 0 10;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: #e3e8ef;
+    -fx-background-radius: 6 6 0 0;
+    -fx-padding: 8 18 8 18;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab .tab-label {
+    -fx-text-fill: -fx-text-dark;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: -fx-primary-color;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab:selected .tab-label {
+    -fx-text-fill: -fx-text-light;
+}
+.tab-pane > .tab-content-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1 0 0 0;
+}
+
 /* Card / Form container */
 .anchor-pane-header {
     -fx-background-color: #ffffff;

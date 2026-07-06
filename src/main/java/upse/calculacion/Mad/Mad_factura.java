@@ -46,14 +46,14 @@ public class Mad_factura {
         try {
             bd.iniciarTransaccion();
 
-            // 1. Buscar cli_id
-            int cliId = 0;
-            String sqlCli = "SELECT cli_id FROM dbo.Cliente WHERE cli_cedula = ? "
+            // 1. Buscar cli_id (la cedula es el propio cli_id)
+            String cliId = null;
+            String sqlCli = "SELECT cli_id FROM dbo.Cliente WHERE cli_id = ? "
                     + "AND (cli_estado = 'A' OR cli_estado IS NULL)";
             try (PreparedStatement ps = bd.getConexion().prepareStatement(sqlCli)) {
                 ps.setString(1, cliCedula);
                 try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) cliId = rs.getInt("cli_id");
+                    if (rs.next()) cliId = rs.getString("cli_id");
                 }
             }
 
@@ -70,8 +70,8 @@ public class Mad_factura {
             try (PreparedStatement ps = bd.getConexion().prepareStatement(sqlFac, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, numFac);
                 ps.setDate(2, java.sql.Date.valueOf(fecha));
-                if (cliId > 0) ps.setInt(3, cliId);
-                else           ps.setNull(3, java.sql.Types.INTEGER);
+                if (cliId != null) ps.setString(3, cliId);
+                else                ps.setNull(3, java.sql.Types.VARCHAR);
                 ps.setFloat(4, subtotal);
                 ps.setFloat(5, baseCero);
                 ps.setFloat(6, iva);

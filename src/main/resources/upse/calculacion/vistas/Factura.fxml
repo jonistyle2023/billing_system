@@ -128,7 +128,6 @@
                           style="-fx-background-color: #e67e22;" />
                   <Button fx:id="btn_nuevo"        mnemonicParsing="false" onAction="#acc_nuevo"        text="%factura.btnNuevo"
                           style="-fx-background-color: #27ae60;" />
-                  <Button fx:id="btn_cerrar"       mnemonicParsing="false" onAction="#acc_cerrar"       text="%factura.btnCerrar" />
                </children>
             </HBox>
             <Region HBox.hgrow="ALWAYS" />
@@ -136,19 +135,19 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
                      <Label text="%factura.subtotal" minWidth="120.0" />
-                     <TextField fx:id="txt_subtotal" prefWidth="100.0" maxWidth="150.0" />
+                     <TextField fx:id="txt_subtotal" editable="false" prefWidth="100.0" maxWidth="150.0" />
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
                      <Label text="%factura.subtotal0" minWidth="120.0" />
-                     <TextField fx:id="txt_subtotal0" prefWidth="100.0" maxWidth="150.0" />
+                     <TextField fx:id="txt_subtotal0" editable="false" prefWidth="100.0" maxWidth="150.0" />
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
                      <Label text="%factura.iva" minWidth="120.0" />
-                     <TextField fx:id="txt_iva" prefWidth="100.0" maxWidth="150.0" />
+                     <TextField fx:id="txt_iva" editable="false" prefWidth="100.0" maxWidth="150.0" />
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
                      <Label text="%factura.total" minWidth="120.0" />
-                     <TextField fx:id="txt_total" prefWidth="100.0" maxWidth="150.0" />
+                     <TextField fx:id="txt_total" editable="false" prefWidth="100.0" maxWidth="150.0" />
                   </HBox>
                </children>
             </VBox>

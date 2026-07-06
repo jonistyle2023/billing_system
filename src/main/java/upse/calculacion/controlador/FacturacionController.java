@@ -87,7 +87,6 @@ public class FacturacionController implements Initializable {
     @FXML private Button btn_grabar;
     @FXML private Button btn_anular;
     @FXML private Button btn_nuevo;
-    @FXML private Button btn_cerrar;
     @FXML private Button btn_eliminarLinea;
 
     private final ObservableList<DetFactura> detalleList = FXCollections.observableArrayList();
@@ -615,21 +614,6 @@ public class FacturacionController implements Initializable {
             if (result.isEmpty() || result.get() != ButtonType.OK) return;
         }
         limpiarFormulario();
-    }
-
-    @FXML
-    private void acc_cerrar(ActionEvent event) {
-        if (hayDatosSinEmitir()) {
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Cerrar");
-            confirm.setHeaderText(null);
-            confirm.setContentText("Hay datos sin emitir que se perderán. ¿Desea cerrar de todas formas?");
-            Optional<ButtonType> result = confirm.showAndWait();
-            if (result.isEmpty() || result.get() != ButtonType.OK) return;
-        }
-        if (facturaPane != null && facturaPane.getParent() instanceof javafx.scene.layout.AnchorPane) {
-            ((javafx.scene.layout.AnchorPane) facturaPane.getParent()).getChildren().remove(facturaPane);
-        }
     }
 
     private void limpiarFormulario() {

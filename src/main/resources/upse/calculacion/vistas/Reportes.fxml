@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="reportesPane" prefHeight="400.0" prefWidth="700.0" spacing="12.0" styleClass="root"
+      xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="upse.calculacion.controlador.ReportesController">
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+   <children>
+      <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="%reportes.titulo" />
+
+      <HBox spacing="10.0" alignment="CENTER_LEFT">
+         <children>
+            <Label text="%reportes.tipo" />
+            <ComboBox fx:id="cmb_tipoReporte" prefWidth="200.0" />
+            <Label text="%reportes.desde" />
+            <DatePicker fx:id="dp_desde" prefWidth="130.0" />
+            <Label text="%reportes.hasta" />
+            <DatePicker fx:id="dp_hasta" prefWidth="130.0" />
+            <Label fx:id="lbl_estado" text="%reportes.estado" />
+            <ComboBox fx:id="cmb_estado" prefWidth="110.0" />
+            <Button text="%reportes.btnGenerar" onAction="#acc_generar" />
+         </children>
+      </HBox>
+
+      <StackPane VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="tblFacturas">
+               <columns>
+                  <TableColumn fx:id="colNumero" prefWidth="130.0" text="%reportes.col.numero" />
+                  <TableColumn fx:id="colFecha" prefWidth="90.0" text="%reportes.col.fecha" />
+                  <TableColumn fx:id="colCliente" prefWidth="180.0" text="%reportes.col.cliente" />
+                  <TableColumn fx:id="colSubtotal" prefWidth="90.0" text="%reportes.col.subtotal" />
+                  <TableColumn fx:id="colSubtotalCero" prefWidth="90.0" text="%reportes.col.subtotal0" />
+                  <TableColumn fx:id="colIva" prefWidth="80.0" text="%reportes.col.iva" />
+                  <TableColumn fx:id="colTotal" prefWidth="90.0" text="%reportes.col.total" />
+                  <TableColumn fx:id="colEstado" prefWidth="80.0" text="%reportes.col.estado" />
+                  <TableColumn fx:id="colMetodoPago" prefWidth="110.0" text="%reportes.col.metodoPago" />
+               </columns>
+            </TableView>
+
+            <TableView fx:id="tblResumen" visible="false" managed="false">
+               <columns>
+                  <TableColumn fx:id="colConcepto" prefWidth="300.0" text="%reportes.col.concepto" />
+                  <TableColumn fx:id="colValor" prefWidth="180.0" text="%reportes.col.valor" />
+               </columns>
+            </TableView>
+
+            <TableView fx:id="tblRanking" visible="false" managed="false">
+               <columns>
+                  <TableColumn fx:id="colRankCodigo" prefWidth="100.0" text="%reportes.col.codigo" />
+                  <TableColumn fx:id="colRankNombre" prefWidth="260.0" text="%reportes.col.nombre" />
+                  <TableColumn fx:id="colRankCantidad" prefWidth="110.0" text="%reportes.col.cantidad" />
+                  <TableColumn fx:id="colRankMonto" prefWidth="110.0" text="%reportes.col.monto" />
+               </columns>
+            </TableView>
+         </children>
+      </StackPane>
+
+      <HBox spacing="10.0" styleClass="footer-bar">
+         <children>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="%reportes.btnExportarPdf" onAction="#acc_exportarPdf" />
+            <Button text="%reportes.btnExportarCsv" onAction="#acc_exportarCsv" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

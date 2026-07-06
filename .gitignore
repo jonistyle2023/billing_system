@@ -4,3 +4,4 @@ target/
 .DS_Store
 CLAUDE.md
 databaseScript.sql
+BDActual.sql

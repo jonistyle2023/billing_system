@@ -4,6 +4,7 @@ module upse.calculacion {
     requires java.base;
     requires java.sql;
     requires java.desktop;
+    requires com.github.librepdf.openpdf;
 
     opens upse.calculacion.controlador to javafx.fxml;
     exports upse.calculacion.controlador;

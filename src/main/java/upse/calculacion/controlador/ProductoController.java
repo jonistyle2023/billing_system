@@ -16,7 +16,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -64,13 +63,6 @@ public class ProductoController implements Initializable {
     private Button btn_eliminar;
 
     private final Mad_producto madProducto = new Mad_producto();
-
-    @FXML
-    private void acc_volver(ActionEvent event) {
-        if (productoPane != null && productoPane.getParent() instanceof AnchorPane) {
-            ((AnchorPane) productoPane.getParent()).getChildren().remove(productoPane);
-        }
-    }
 
     @FXML
     private void acc_buscar(ActionEvent event) {

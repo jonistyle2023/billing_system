@@ -32,9 +32,8 @@
        </TableView>
       <HBox spacing="10.0" styleClass="footer-bar">
          <children>
-            <Button mnemonicParsing="false" text="%clientes.btnModificar" />
-            <Button mnemonicParsing="false" text="%clientes.btnEliminar" />
-            <Button mnemonicParsing="false" onAction="#acc_cerrar" text="%clientes.btnCerrar" />
+            <Button fx:id="btn_modificar" mnemonicParsing="false" onAction="#acc_modificar" text="%clientes.btnModificar" />
+            <Button fx:id="btn_eliminar" mnemonicParsing="false" onAction="#acc_eliminar" text="%clientes.btnEliminar" />
          </children>
       </HBox>
    </children>

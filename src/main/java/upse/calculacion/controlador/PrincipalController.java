@@ -7,32 +7,47 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import static upse.calculacion.general.Mod_general.DIRVISTAS;
 import upse.calculacion.Mad.Mad_empresa;
 import upse.calculacion.modelo.Empresa;
 
 public class PrincipalController implements Initializable {
 
     @FXML
-    private AnchorPane dataPane;
+    private TabPane tabPrincipal;
+
+    @FXML
+    private Tab tabClientes;
+
+    @FXML
+    private Tab tabProductos;
+
+    @FXML
+    private Tab tabFacturacion;
+
+    @FXML
+    private Tab tabReportes;
+
+    @FXML
+    private ClientesController clientesTabController;
 
     @FXML
     private ComboBox<String> cmb_idioma;
 
     @FXML
     private Label lbl_usuario;
+
+    @FXML
+    private Label lbl_bienvenida;
 
     @FXML
     private Label lbl_empresaNombre;
@@ -45,38 +60,30 @@ public class PrincipalController implements Initializable {
 
     @FXML
     private void acc_abrirProductos(ActionEvent event) {
-        try {
-            Node pantalla = cargarVista("Producto");
-            setDataPane(pantalla);
-        } catch (IOException ex) {
-            mostrarError("No se pudo abrir el modulo de productos.");
-        }
+        tabPrincipal.getSelectionModel().select(tabProductos);
     }
 
     @FXML
     private void acc_abrirClientes(ActionEvent event) {
-        try {
-            Node pantalla = cargarVista("Clientes");
-            setDataPane(pantalla);
-        } catch (IOException ex) {
-            mostrarError("No se pudo abrir el modulo de clientes.");
-        }
+        tabPrincipal.getSelectionModel().select(tabClientes);
     }
-    
+
     @FXML
     private void acc_abrirFactura(ActionEvent event) {
-        try {
-            Node pantalla = cargarVista("Factura");
-            setDataPane(pantalla);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            mostrarError("No se pudo abrir el modulo de facturas.\nError: " + ex.getMessage());
-        }
+        tabPrincipal.getSelectionModel().select(tabFacturacion);
+    }
+
+    @FXML
+    private void acc_abrirReportes(ActionEvent event) {
+        tabPrincipal.getSelectionModel().select(tabReportes);
     }
 
     @FXML
     private void acc_abrirClienteModal(ActionEvent event) {
         abrirModal("Cliente", App.getBundle().getString("cliente.titulo"));
+        if (clientesTabController != null) {
+            clientesTabController.refrescar();
+        }
     }
 
     @FXML
@@ -138,6 +145,11 @@ public class PrincipalController implements Initializable {
             lbl_usuario.setText(App.getUsuarioActual().getNombres());
         }
 
+        if (lbl_bienvenida != null) {
+            String nombre = App.getUsuarioActual() != null ? App.getUsuarioActual().getNombres() : "";
+            lbl_bienvenida.setText(App.getBundle().getString("principal.bienvenida") + " " + nombre);
+        }
+
         cargarEmpresa();
     }
 
@@ -147,23 +159,6 @@ public class PrincipalController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-    
-    public void setDataPane(Node node) {
-        dataPane.getChildren().setAll(node);
-
-        AnchorPane.setTopAnchor(node, 0.0);
-        AnchorPane.setRightAnchor(node, 0.0);
-        AnchorPane.setBottomAnchor(node, 0.0);
-        AnchorPane.setLeftAnchor(node, 0.0);
-
-        if (node instanceof Region) {
-            ((Region) node).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        }
-    }
-
-    private Node cargarVista(String nombreFxml) throws IOException {
-        return App.loadFXML(nombreFxml);
     }
 
     private void cargarEmpresa() {
@@ -184,15 +179,15 @@ public class PrincipalController implements Initializable {
             if (lbl_empresaTelefono != null) lbl_empresaTelefono.setText("");
         }
     }
-    
+
     private void abrirModal(String nombreFxml, String titulo) {
         try {
             Parent root = App.loadFXML(nombreFxml);
             Stage stage = new Stage();
             stage.setTitle(titulo);
             stage.initModality(Modality.WINDOW_MODAL);
-            if (dataPane != null && dataPane.getScene() != null) {
-                stage.initOwner(dataPane.getScene().getWindow());
+            if (tabPrincipal != null && tabPrincipal.getScene() != null) {
+                stage.initOwner(tabPrincipal.getScene().getWindow());
             }
             stage.setScene(new Scene(root));
             stage.showAndWait();

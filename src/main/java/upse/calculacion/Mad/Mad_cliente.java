@@ -137,6 +137,21 @@ public class Mad_cliente {
         }
     }
 
+    public boolean eliminarCliente(String id) throws SQLException {
+        String sql = "update dbo.Cliente set cli_estado = 'E' where cli_id = ?";
+
+        if (!bd.conectarBD()) {
+            throw new IllegalStateException("No se pudo conectar a la base de datos.");
+        }
+
+        try (PreparedStatement sentencia = bd.getConexion().prepareStatement(sql)) {
+            sentencia.setString(1, id);
+            return sentencia.executeUpdate() > 0;
+        } finally {
+            bd.desconectarBD();
+        }
+    }
+
     private Cliente mapearCliente(ResultSet rs) throws SQLException {
         Cliente cliente = new Cliente();
         cliente.setCedula(rs.getString("cli_id"));

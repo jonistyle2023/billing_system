@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -40,81 +37,13 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="%principal.reportes">
                      <items>
+                        <MenuItem mnemonicParsing="false" onAction="#acc_abrirReportes" text="%principal.verReportes" />
                         <MenuItem mnemonicParsing="false" onAction="#acc_salir" text="%principal.salir" />
                      </items>
                   </Menu>
                </menus>
             </MenuBar>
          </top>
-
-         <left>
-            <Accordion BorderPane.alignment="TOP_LEFT">
-               <panes>
-                  <TitledPane animated="false" text="%principal.tituloArchivo">
-                     <content>
-                        <VBox spacing="4.0" alignment="TOP_CENTER">
-                           <padding><Insets top="8.0" bottom="8.0" left="6.0" right="6.0" /></padding>
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#acc_abrirClientes"
-                                      prefHeight="65.0" prefWidth="104.0"
-                                      text="%principal.btnClientes" contentDisplay="TOP">
-                                 <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                       <image><Image url="@recursos/business-people.png" /></image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Button mnemonicParsing="false" onAction="#acc_abrirProductos"
-                                      prefHeight="65.0" prefWidth="104.0"
-                                      text="%principal.btnProductos" contentDisplay="TOP">
-                                 <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                       <image><Image url="@recursos/agregar-producto.png" /></image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                     </content>
-                  </TitledPane>
-
-                  <TitledPane animated="false" text="%principal.tituloFacturacion">
-                     <content>
-                        <VBox spacing="4.0" alignment="TOP_CENTER">
-                           <padding><Insets top="8.0" bottom="8.0" left="6.0" right="6.0" /></padding>
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#acc_abrirFactura"
-                                      prefHeight="65.0" prefWidth="104.0"
-                                      text="%principal.btnFactura" contentDisplay="TOP">
-                                 <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                       <image><Image url="@recursos/maquina-de-fax.png" /></image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                     </content>
-                  </TitledPane>
-
-                  <TitledPane animated="false" text="%principal.empresa">
-                     <content>
-                        <VBox spacing="3.0">
-                           <padding><Insets top="8.0" bottom="8.0" left="8.0" right="8.0" /></padding>
-                           <children>
-                              <Label style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="%principal.empresaNombre" />
-                              <Label fx:id="lbl_empresaNombre" prefWidth="140.0" wrapText="true" style="-fx-font-size: 11px;" />
-                              <Label style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="%principal.empresaDireccion" />
-                              <Label fx:id="lbl_empresaDireccion" prefWidth="140.0" wrapText="true" style="-fx-font-size: 11px;" />
-                              <Label style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="%principal.empresaTelefono" />
-                              <Label fx:id="lbl_empresaTelefono" prefWidth="140.0" wrapText="true" style="-fx-font-size: 11px;" />
-                           </children>
-                        </VBox>
-                     </content>
-                  </TitledPane>
-               </panes>
-            </Accordion>
-         </left>
 
          <bottom>
             <HBox alignment="CENTER_LEFT" prefHeight="34.0" spacing="6.0"
@@ -132,7 +61,60 @@
          </bottom>
 
          <center>
-            <AnchorPane fx:id="dataPane" style="-fx-background-color: #f5f6fa;" BorderPane.alignment="CENTER" />
+            <TabPane fx:id="tabPrincipal" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+               <tabs>
+                  <Tab fx:id="tabInicio" text="%principal.tabInicio" closable="false">
+                     <content>
+                        <AnchorPane>
+                           <children>
+                              <VBox spacing="14.0" styleClass="anchor-pane-header"
+                                    AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+                                 <padding><Insets top="18.0" bottom="18.0" left="18.0" right="18.0" /></padding>
+                                 <children>
+                                    <Label fx:id="lbl_bienvenida" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="%principal.bienvenida" />
+                                    <VBox spacing="3.0">
+                                       <children>
+                                          <Label style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="%principal.empresa" />
+                                          <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="%principal.empresaNombre" />
+                                          <Label fx:id="lbl_empresaNombre" wrapText="true" />
+                                          <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="%principal.empresaDireccion" />
+                                          <Label fx:id="lbl_empresaDireccion" wrapText="true" />
+                                          <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="%principal.empresaTelefono" />
+                                          <Label fx:id="lbl_empresaTelefono" wrapText="true" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+
+                  <Tab fx:id="tabClientes" text="%principal.btnClientes" closable="false">
+                     <content>
+                        <fx:include source="Clientes.fxml" fx:id="clientesTab" />
+                     </content>
+                  </Tab>
+
+                  <Tab fx:id="tabProductos" text="%principal.btnProductos" closable="false">
+                     <content>
+                        <fx:include source="Producto.fxml" fx:id="productosTab" />
+                     </content>
+                  </Tab>
+
+                  <Tab fx:id="tabFacturacion" text="%principal.btnFactura" closable="false">
+                     <content>
+                        <fx:include source="Factura.fxml" fx:id="facturaTab" />
+                     </content>
+                  </Tab>
+
+                  <Tab fx:id="tabReportes" text="%principal.btnReportes" closable="false">
+                     <content>
+                        <fx:include source="Reportes.fxml" fx:id="reportesTab" />
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
          </center>
       </BorderPane>
    </children>

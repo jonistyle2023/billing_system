@@ -1,8 +1,6 @@
 package upse.calculacion.controlador;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,22 +32,24 @@ public class ClienteController implements Initializable {
     private TextField txt_correo;
     @FXML
     private CheckBox chk_validar;
-    private int bandera = 0;
     private final Mad_cliente madCliente = new Mad_cliente();
 
-    private static List<Cliente> clientes = new ArrayList<>();
-
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            cargarClientesDesdeBD();
-        } catch (Exception e) {
-            fun_mensajeError("No se pudieron cargar los clientes desde la base de datos: " + e.getMessage());
+    }
+
+    /** Precarga el formulario para modificar un cliente existente. Con null, queda en blanco para uno nuevo. */
+    public void setCliente(Cliente cliente) {
+        if (cliente == null) {
+            return;
         }
-    }    
+        txt_cedula.setText(cliente.getCedula());
+        txt_cedula.setEditable(false); // la cedula es la clave primaria, no se debe cambiar al editar
+        txt_nombres.setText(cliente.getNombres());
+        txt_direccion.setText(cliente.getDireccion());
+        txt_telefono.setText(cliente.getTelefono());
+        txt_correo.setText(cliente.getCorreo());
+    }
 
     @FXML
     private void acc_cerrar(ActionEvent event) {
@@ -79,68 +79,10 @@ public class ClienteController implements Initializable {
                 return;
             }
             madCliente.guardarCliente(obj);
-            cargarClientesDesdeBD();
             this.cerrarFormulario();
         } catch (Exception e) {
              fun_mensajeError(e.getMessage());
         }
-    }
-    
-    public void recuperarCliente(String id){
-        if(id == null || id.isEmpty()){
-            bandera=0;//nuevo "Insert"
-        }else{
-            bandera=1;//modificar "update"
-        }
-      
-        if(bandera==0){
-            //limpiar la pantalla
-            limpiarPantalla();
-        }else{
-            //recuperar el cliente
-            recuperarcliente(id);
-        }
-    }
-
-    private void cargarClientesDesdeBD() throws Exception {
-        clientes = madCliente.listarClientes();
-    }
-
-    private void limpiarPantalla() {
-        this.txt_cedula.setText("");
-        this.txt_nombres.setText("");
-        this.txt_direccion.setText("");
-        this.txt_telefono.setText("");
-        this.txt_correo.setText("");
-    }
-    
-    private void recuperarcliente(String id){
-        if (clientes.isEmpty()) {
-            try {
-                cargarClientesDesdeBD();
-            } catch (Exception e) {
-                fun_mensajeError("No se pudieron cargar los clientes desde la base de datos: " + e.getMessage());
-                return;
-            }
-        }
-        Cliente objCliente = fun_retornaCliente(id);
-        if (objCliente!=null){
-            //cargar los datos
-            this.txt_cedula.setText(objCliente.getCedula());
-            this.txt_nombres.setText(objCliente.getNombres());
-            this.txt_direccion.setText(objCliente.getDireccion());
-            this.txt_telefono.setText(objCliente.getTelefono());
-            this.txt_correo.setText(objCliente.getCorreo());
-        }
-    }
-
-    private Cliente fun_retornaCliente(String id){
-        for (Cliente objCliente : clientes) {
-            if(objCliente.getCedula().equals(id)){
-                return objCliente;
-            }       
-        }
-        return null;
     }
 
     private void fun_mensajeError(String mensaje) {

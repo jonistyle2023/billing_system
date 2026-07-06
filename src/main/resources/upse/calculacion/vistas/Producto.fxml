@@ -36,7 +36,6 @@
          <children>
             <Button fx:id="btn_modificar" mnemonicParsing="false" onAction="#acc_modificar" text="%producto.btnModificar" />
             <Button fx:id="btn_eliminar" mnemonicParsing="false" onAction="#acc_eliminar" text="%producto.btnEliminar" />
-            <Button mnemonicParsing="false" onAction="#acc_volver" text="%producto.btnVolver" />
          </children>
       </HBox>
    </children>
