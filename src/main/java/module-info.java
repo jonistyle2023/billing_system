@@ -4,7 +4,10 @@ module upse.calculacion {
     requires java.base;
     requires java.sql;
     requires java.desktop;
-    requires com.github.librepdf.openpdf;
+    requires java.xml;
+    requires java.xml.crypto;
+    requires java.net.http;
+    requires jasperreports;
 
     opens upse.calculacion.controlador to javafx.fxml;
     exports upse.calculacion.controlador;

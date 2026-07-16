@@ -8,17 +8,30 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
+
+        <!-- Empaquetado (perfil "installer", ver más abajo) -->
+        <installer.mainJarBaseName>${project.artifactId}-${project.version}-jar-with-dependencies</installer.mainJarBaseName>
+        <installer.mainClass>upse.calculacion.controlador.Launcher</installer.mainClass>
+        <installer.appName>Facturacion</installer.appName>
+        <!-- jpackage exige major.minor.build numérico para MSI; independiente de ${project.version} (que trae -SNAPSHOT) -->
+        <installer.appVersion>1.0.0</installer.appVersion>
+        <installer.vendor>UPSE</installer.vendor>
+        <installer.type>msi</installer.type>
+        <!-- Fijo: permite que un MSI nuevo reemplace/actualice la instalación anterior en vez de fallar por "ya instalado" -->
+        <installer.winUpgradeUuid>df149e50-582f-48ff-b178-ab4cd94c7033</installer.winUpgradeUuid>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>23</version>
+            <classifier>win</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>23</version>
+            <classifier>win</classifier>
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
@@ -27,19 +40,23 @@
         </dependency>
 
         <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-identity</artifactId>
-            <version>1.4.3</version>
-        </dependency>
-        <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>3.4.1</version>
+            <exclusions>
+                <!-- jcl-over-slf4j expone el mismo paquete org.apache.commons.logging que la
+                     commons-logging "real" que traen jasperreports/barcode4j/batik; con ambos
+                     en el module path (JPMS), el arranque falla por paquete duplicado. -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.librepdf</groupId>
-            <artifactId>openpdf</artifactId>
-            <version>1.3.42</version>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>6.21.3</version>
         </dependency>
     </dependencies>
     <build>
@@ -51,6 +68,42 @@
                 <configuration>
                     <release>23</release>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <!-- Genera target/facturacion-<version>-jar-with-dependencies.jar, ejecutable con
+                             "java -jar" (classpath plano, no requiere module-path). El módulo automático
+                             de jasperreports no aplica aquí porque este jar no se lanza vía JPMS. -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${installer.mainJarBaseName}</finalName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${installer.mainClass}</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.openjfx</groupId>
@@ -107,4 +160,99 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!--
+            Genera el instalador de Windows (MSI por defecto) a partir del jar sombreado.
+            Requiere jpackage (incluido en el JDK 17+) y, para los tipos msi/exe, WiX Toolset
+            instalado y en el PATH (candle.exe / light.exe).
+
+            Uso:
+              mvn -Pinstaller clean verify
+            Resultado:
+              target/dist/Facturacion-1.0.0.msi
+
+            Para generar un exe en vez de msi:
+              mvn -Pinstaller clean verify -Dinstaller.type=exe
+        -->
+        <profile>
+            <id>installer</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- Copia solo el jar sombreado a una carpeta aparte: jpackage empaqueta
+                             todo el contenido de la carpeta de entrada, y target/ también tiene
+                             el jar delgado (sin dependencias) que no debe terminar en el instalador. -->
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>preparar-entrada-jpackage</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${project.build.directory}/jpackage-input" />
+                                        <copy file="${project.build.directory}/${installer.mainJarBaseName}.jar"
+                                              todir="${project.build.directory}/jpackage-input" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage</id>
+                                <!-- "verify" corre después de "package", garantizando que el jar
+                                     sombreado y la carpeta jpackage-input ya existen. -->
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>jpackage</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>--type</argument>
+                                        <argument>${installer.type}</argument>
+                                        <argument>--input</argument>
+                                        <argument>${project.build.directory}/jpackage-input</argument>
+                                        <argument>--dest</argument>
+                                        <argument>${project.build.directory}/dist</argument>
+                                        <argument>--name</argument>
+                                        <argument>${installer.appName}</argument>
+                                        <argument>--app-version</argument>
+                                        <argument>${installer.appVersion}</argument>
+                                        <argument>--vendor</argument>
+                                        <argument>${installer.vendor}</argument>
+                                        <argument>--description</argument>
+                                        <argument>Sistema de Facturación</argument>
+                                        <argument>--main-jar</argument>
+                                        <argument>${installer.mainJarBaseName}.jar</argument>
+                                        <argument>--main-class</argument>
+                                        <argument>${installer.mainClass}</argument>
+                                        <argument>--icon</argument>
+                                        <argument>src/main/resources/upse/calculacion/vistas/recursos/fax.ico</argument>
+                                        <argument>--win-menu</argument>
+                                        <argument>--win-menu-group</argument>
+                                        <argument>${installer.appName}</argument>
+                                        <argument>--win-shortcut</argument>
+                                        <argument>--win-upgrade-uuid</argument>
+                                        <argument>${installer.winUpgradeUuid}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

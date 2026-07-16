@@ -5,3 +5,4 @@ target/
 CLAUDE.md
 databaseScript.sql
 BDActual.sql
+dependency-reduced-pom.xml

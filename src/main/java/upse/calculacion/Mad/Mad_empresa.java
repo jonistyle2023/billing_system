@@ -19,7 +19,8 @@ public class Mad_empresa {
     }
 
     public Empresa obtenerEmpresaActiva() throws SQLException {
-        String sql = "select top 1 emp_nombre, emp_direccion, emp_telefono, emp_estado "
+        String sql = "select top 1 emp_ruc, emp_nombre, emp_direccion, emp_telefono, "
+                + "emp_obligadoContabilidad, emp_estado "
                 + "from dbo.Empresa "
                 + "where emp_estado = 'A' or emp_estado is null "
                 + "order by emp_nombre";
@@ -32,9 +33,11 @@ public class Mad_empresa {
                 ResultSet rs = sentencia.executeQuery()) {
             if (rs.next()) {
                 Empresa empresa = new Empresa();
+                empresa.setRuc(rs.getString("emp_ruc"));
                 empresa.setNombre(rs.getString("emp_nombre"));
                 empresa.setDireccion(rs.getString("emp_direccion"));
                 empresa.setTelefono(rs.getString("emp_telefono"));
+                empresa.setObligadoContabilidad(rs.getBoolean("emp_obligadoContabilidad"));
                 empresa.setEstado(rs.getString("emp_estado"));
                 return empresa;
             }

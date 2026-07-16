@@ -11,9 +11,11 @@ public class FacturaReporte {
     private final String total;
     private final String estado;
     private final String metodoPago;
+    private final String estadoSri;
 
     public FacturaReporte(String numero, String fecha, String cliente, String subtotal,
-                           String subtotalCero, String iva, String total, String estado, String metodoPago) {
+                           String subtotalCero, String iva, String total, String estado, String metodoPago,
+                           String estadoSri) {
         this.numero = numero;
         this.fecha = fecha;
         this.cliente = cliente;
@@ -23,6 +25,7 @@ public class FacturaReporte {
         this.total = total;
         this.estado = estado;
         this.metodoPago = metodoPago;
+        this.estadoSri = estadoSri;
     }
 
     public String getNumero() { return numero; }
@@ -34,4 +37,5 @@ public class FacturaReporte {
     public String getTotal() { return total; }
     public String getEstado() { return estado; }
     public String getMetodoPago() { return metodoPago; }
+    public String getEstadoSri() { return estadoSri; }
 }

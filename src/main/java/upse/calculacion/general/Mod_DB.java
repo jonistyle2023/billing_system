@@ -53,10 +53,10 @@ public class Mod_DB {
     public boolean conectarBD() {
         String servidor, basedatos, usuario, clave, classNombre, cadenaConexion;
         if (Mod_general.gestorBD == 1) {// se conecta con mysql
-            servidor = "localhost";
-            basedatos = "base20261";
-            usuario = "root";
-            clave = "";
+            servidor = Mod_configuracion.get("db.mariadb.servidor", "localhost");
+            basedatos = Mod_configuracion.get("db.mariadb.baseDatos", "base20261");
+            usuario = Mod_configuracion.get("db.mariadb.usuario", "root");
+            clave = Mod_configuracion.get("db.mariadb.clave", "");
             Mod_general.str_nombreBD = "Maria DB";
             //cadena de conección
             classNombre = "org.mariadb.jdbc.Driver";
@@ -67,10 +67,10 @@ public class Mod_DB {
                     + "&" + "password=" + clave;
         } else {
             //conecta con SQL Server
-            servidor = "localhost";
-            basedatos = "BD2026_1";
-            usuario = "sa";
-            clave = "Admin.";
+            servidor = Mod_configuracion.get("db.sqlserver.servidor", "localhost");
+            basedatos = Mod_configuracion.get("db.sqlserver.baseDatos", "BD2026_1");
+            usuario = Mod_configuracion.get("db.sqlserver.usuario", "sa");
+            clave = Mod_configuracion.get("db.sqlserver.clave", "Admin.");
             Mod_general.str_nombreBD = "SQL Server";
             classNombre = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
             cadenaConexion = "jdbc:sqlserver://"
@@ -82,17 +82,11 @@ public class Mod_DB {
         }
         try {
             Class.forName(classNombre);
-            //System.out.println(cadenaConexion);
             Connection conexion = DriverManager.getConnection(cadenaConexion);
-            //conexion.setAutoCommit(false);
             this.setConexion(conexion);
-            // System.out.println("ConectarBD");
             return true;
         } catch (Exception e) {
-            System.err.println("=== ERROR DE CONEXIÓN ===");
-            System.err.println("Mensaje: " + e.getMessage());
-            System.err.println("Causa: " + e.getCause());
-            e.printStackTrace();
+            Mod_log.error("Error de conexión a la base de datos (" + Mod_general.str_nombreBD + ")", e);
             return false;
         }
     }
@@ -101,7 +95,7 @@ public class Mod_DB {
         try {
             this.conexion.close();
         } catch (Exception e) {
-            System.out.println(e);
+            Mod_log.warning("Error al desconectar de la base de datos: " + e.getMessage());
         }
     }
 
@@ -109,7 +103,7 @@ public class Mod_DB {
         try {
             this.conexion.setAutoCommit(false);
         } catch (Exception e) {
-            System.out.println(e);
+            Mod_log.warning("Error al iniciar transacción: " + e.getMessage());
         }
     }
 
@@ -117,7 +111,7 @@ public class Mod_DB {
         try {
             this.conexion.commit();
         } catch (Exception e) {
-            System.out.println(e);
+            Mod_log.warning("Error al hacer commit: " + e.getMessage());
         }
     }
 
@@ -125,7 +119,7 @@ public class Mod_DB {
         try {
             this.conexion.rollback();
         } catch (Exception e) {
-            System.out.println(e);
+            Mod_log.warning("Error al hacer rollback: " + e.getMessage());
         }
     }
 
@@ -136,7 +130,7 @@ public class Mod_DB {
             this.sentenciaSQL = this.conexion.createStatement();
             this.resulSet = this.sentenciaSQL.executeQuery(cadenaSQL);
         } catch (Exception e) {
-            System.out.println(e);
+            Mod_log.error("Error al ejecutar consulta SQL: " + cadenaSQL, e);
         }
 
     }
@@ -149,7 +143,7 @@ public class Mod_DB {
             filas = this.sentenciaSQL.executeUpdate(cadenaSQL);
             this.commit();
         } catch (Exception e) {
-            System.out.println(e);
+            Mod_log.error("Error al ejecutar SQL: " + cadenaSQL, e);
         }
         return filas;
     }
@@ -166,8 +160,7 @@ public class Mod_DB {
             }
             rs.close();
         } catch (Exception e) {
-            System.err.println("ERROR en getListaConsulta: " + e.getMessage());
-            e.printStackTrace();
+            Mod_log.error("Error en getListaConsulta: " + cadenaSQL, e);
         } finally {
             desconectarBD();
         }

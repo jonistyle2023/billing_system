@@ -117,9 +117,9 @@ public class PrincipalController implements Initializable {
         String seleccion = cmb_idioma.getSelectionModel().getSelectedItem();
         if (seleccion != null) {
             if (seleccion.equals("English")) {
-                App.cambiarIdioma(new Locale("en"));
+                App.cambiarIdioma(Locale.of("en"));
             } else {
-                App.cambiarIdioma(new Locale("es"));
+                App.cambiarIdioma(Locale.of("es"));
             }
             try {
                 // Recargar la vista principal para aplicar el idioma

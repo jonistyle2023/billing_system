@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,17 +37,27 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import javafx.util.converter.FloatStringConverter;
 import upse.calculacion.Mad.Mad_cliente;
+import upse.calculacion.Mad.Mad_configuracionSri;
+import upse.calculacion.Mad.Mad_empresa;
 import upse.calculacion.Mad.Mad_factura;
 import upse.calculacion.Mad.Mad_producto;
+import upse.calculacion.general.Mod_jasperReporte;
 import upse.calculacion.general.Mod_VariablesGlobales;
 import upse.calculacion.modelo.Cliente;
+import upse.calculacion.modelo.ConfiguracionSri;
+import upse.calculacion.modelo.DatosSriFactura;
 import upse.calculacion.modelo.DetFactura;
+import upse.calculacion.modelo.Empresa;
 import upse.calculacion.modelo.Producto;
+import upse.calculacion.modelo.ResultadoEmisionFactura;
 import static upse.calculacion.general.Mod_general.DIRVISTAS;
 
 public class FacturacionController implements Initializable {
@@ -86,6 +97,7 @@ public class FacturacionController implements Initializable {
 
     @FXML private Button btn_grabar;
     @FXML private Button btn_anular;
+    @FXML private Button btn_imprimir;
     @FXML private Button btn_nuevo;
     @FXML private Button btn_eliminarLinea;
 
@@ -408,6 +420,62 @@ public class FacturacionController implements Initializable {
         boolean emitida = numFacturaEmitida != null;
         btn_grabar.setDisable(emitida);
         btn_anular.setDisable(!emitida);
+        btn_imprimir.setDisable(!emitida);
+    }
+
+    @FXML
+    private void acc_imprimir(ActionEvent event) {
+        if (numFacturaEmitida == null) return;
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Guardar factura (RIDE) en PDF");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+        chooser.setInitialFileName("factura_" + numFacturaEmitida.replace('-', '_') + ".pdf");
+        java.io.File destino = chooser.showSaveDialog(facturaPane.getScene().getWindow());
+        if (destino == null) return;
+
+        try {
+            Map<String, Object> parametros = armarParametrosFactura();
+            List<DetFactura> lineasValidas = detalleList.stream()
+                    .filter(d -> d.getProd_cod() != null && !d.getProd_cod().isEmpty())
+                    .collect(Collectors.toList());
+            Mod_jasperReporte.generarFacturaPDF(parametros, lineasValidas, destino);
+            mostrarInfo("Factura exportada a:\n" + destino.getAbsolutePath());
+        } catch (Exception e) {
+            mostrarError("No se pudo generar el PDF de la factura: " + e.getMessage());
+        }
+    }
+
+    private Map<String, Object> armarParametrosFactura() throws SQLException {
+        Empresa empresa = new Mad_empresa().obtenerEmpresaActiva();
+        ConfiguracionSri configuracion = new Mad_configuracionSri().obtener();
+        DatosSriFactura datosSri = madFactura.obtenerDatosSri(numFacturaEmitida);
+
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("empresaNombre", empresa != null ? empresa.getNombre() : "");
+        parametros.put("empresaRuc", empresa != null ? empresa.getRuc() : "");
+        parametros.put("empresaDireccion", empresa != null ? empresa.getDireccion() : "");
+        parametros.put("empresaTelefono", empresa != null ? empresa.getTelefono() : "");
+        parametros.put("obligadoContabilidad", empresa != null && empresa.isObligadoContabilidad() ? "SI" : "NO");
+        parametros.put("numeroFactura", numFacturaEmitida);
+        parametros.put("fechaEmision", txt_fecha.getText());
+        parametros.put("ambiente", configuracion.getAmbiente());
+        parametros.put("claveAcceso", datosSri.getClaveAcceso() != null ? datosSri.getClaveAcceso() : "");
+        parametros.put("numeroAutorizacion", datosSri.getNumeroAutorizacion());
+        parametros.put("fechaAutorizacion", datosSri.getFechaAutorizacion());
+        parametros.put("estadoSri", datosSri.getEstadoSri());
+        parametros.put("clienteNombre", txt_nombres.getText());
+        parametros.put("clienteIdentificacion", txt_cedula.getText());
+        parametros.put("clienteDireccion", txt_direccion.getText());
+        parametros.put("clienteTelefono", txt_telefono.getText());
+        parametros.put("formaPago", getMetodoPago());
+        parametros.put("montoRecibido", "$ " + txt_montoRecibido.getText());
+        parametros.put("cambio", "$ " + lbl_cambio.getText());
+        parametros.put("subtotal", "$ " + txt_subtotal.getText());
+        parametros.put("subtotalCero", "$ " + txt_subtotal0.getText());
+        parametros.put("iva", "$ " + txt_iva.getText());
+        parametros.put("total", "$ " + txt_total.getText());
+        return parametros;
     }
 
     private boolean hayDatosSinEmitir() {
@@ -551,27 +619,42 @@ public class FacturacionController implements Initializable {
             float iva   = subtotal * Mod_VariablesGlobales.getTasaIva();
             float total = subtotal + baseCero + iva;
 
-            // ── Emitir ────────────────────────────────────────────────────
+            // ── Emitir (en segundo plano: firma + envío al SRI puede tardar varios
+            //    segundos y no debe congelar la ventana) ─────────────────────────
             int usrId = App.getUsuarioActual() != null ? App.getUsuarioActual().getId() : 0;
-            String numFac = madFactura.emitirFactura(
-                    cedula, LocalDate.now(),
-                    subtotal, baseCero, iva, total,
-                    usrId, lineasValidas,
-                    metodo, pagoMonto, pagoCambio);
-
-            numFacturaEmitida = numFac;
-            txt_numFactura.setText(numFac);
-            actualizarEstadoBotones();
-
             String infoCliente = esNuevo
                     ? "Cliente registrado. "
                     : (chk_validar.isSelected() ? "Datos del cliente actualizados. " : "");
-
             String infoPago = "EFECTIVO".equals(metodo)
                     ? String.format(Locale.US, "\nPago: Efectivo  |  Recibido: $ %.2f  |  Cambio: $ %.2f", pagoMonto, pagoCambio)
                     : "\nPago: " + metodo;
 
-            mostrarInfo(infoCliente + "Factura emitida correctamente.\nNro.: " + numFac + infoPago);
+            final float subtotalParaEmitir = subtotal;
+            final float baseCeroParaEmitir = baseCero;
+            final float montoParaEmitir = pagoMonto;
+            final float cambioParaEmitir = pagoCambio;
+            btn_grabar.setDisable(true);
+            Task<ResultadoEmisionFactura> tarea = new Task<>() {
+                @Override
+                protected ResultadoEmisionFactura call() throws Exception {
+                    return madFactura.emitirFactura(cedula, LocalDate.now(), subtotalParaEmitir, baseCeroParaEmitir,
+                            iva, total, usrId, lineasValidas, metodo, montoParaEmitir, cambioParaEmitir);
+                }
+            };
+            tarea.setOnSucceeded(ev -> {
+                ResultadoEmisionFactura resultado = tarea.getValue();
+                numFacturaEmitida = resultado.getNumeroFactura();
+                txt_numFactura.setText(resultado.getNumeroFactura());
+                actualizarEstadoBotones();
+                mostrarInfo(infoCliente + "Factura emitida correctamente.\nNro.: " + resultado.getNumeroFactura()
+                        + infoPago + "\n\nEstado SRI: " + resultado.getEstadoSri()
+                        + (resultado.getMensajeSri() != null ? "\n" + resultado.getMensajeSri() : ""));
+            });
+            tarea.setOnFailed(ev -> {
+                btn_grabar.setDisable(false);
+                mostrarError("No se pudo emitir la factura: " + tarea.getException().getMessage());
+            });
+            new Thread(tarea, "emision-factura-sri").start();
 
         } catch (Exception e) {
             mostrarError("No se pudo emitir la factura: " + e.getMessage());

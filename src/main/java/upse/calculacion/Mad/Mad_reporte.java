@@ -38,7 +38,8 @@ public class Mad_reporte {
 
         StringBuilder sql = new StringBuilder(
                 "SELECT f.fac_numero, f.fac_fecha, COALESCE(c.cli_nombres, '(Sin cliente)') AS cliente, "
-                + "f.fac_subtotal, f.fac_subtotalcero, f.fac_iva, f.fac_total, f.fac_estado, f.fac_pago_metodo "
+                + "f.fac_subtotal, f.fac_subtotalcero, f.fac_iva, f.fac_total, f.fac_estado, f.fac_pago_metodo, "
+                + "f.fe_estado "
                 + "FROM dbo.Factura f "
                 + "LEFT JOIN dbo.Cliente c ON c.cli_id = f.cli_id "
                 + "WHERE f.fac_fecha >= ? AND f.fac_fecha < DATEADD(day, 1, ?) ");
@@ -68,7 +69,8 @@ public class Mad_reporte {
                             formatearMonto(rs.getFloat("fac_iva")),
                             formatearMonto(rs.getFloat("fac_total")),
                             "A".equals(rs.getString("fac_estado")) ? "Activa" : "Anulada",
-                            rs.getString("fac_pago_metodo")));
+                            rs.getString("fac_pago_metodo"),
+                            rs.getString("fe_estado") != null ? rs.getString("fe_estado") : "N/A"));
                 }
             }
         } finally {

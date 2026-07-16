@@ -2,9 +2,11 @@ package upse.calculacion.modelo;
 
 public class Empresa {
 
+    private String ruc;
     private String nombre;
     private String direccion;
     private String telefono;
+    private boolean obligadoContabilidad;
     private String estado;
 
     public Empresa() {
@@ -15,6 +17,22 @@ public class Empresa {
         this.direccion = direccion;
         this.telefono = telefono;
         this.estado = estado;
+    }
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
+
+    public boolean isObligadoContabilidad() {
+        return obligadoContabilidad;
+    }
+
+    public void setObligadoContabilidad(boolean obligadoContabilidad) {
+        this.obligadoContabilidad = obligadoContabilidad;
     }
 
     public String getNombre() {

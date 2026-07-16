@@ -48,6 +48,7 @@
                   <TableColumn fx:id="colTotal" prefWidth="90.0" text="%reportes.col.total" />
                   <TableColumn fx:id="colEstado" prefWidth="80.0" text="%reportes.col.estado" />
                   <TableColumn fx:id="colMetodoPago" prefWidth="110.0" text="%reportes.col.metodoPago" />
+                  <TableColumn fx:id="colEstadoSri" prefWidth="110.0" text="%reportes.col.estadoSri" />
                </columns>
             </TableView>
 
@@ -66,14 +67,37 @@
                   <TableColumn fx:id="colRankMonto" prefWidth="110.0" text="%reportes.col.monto" />
                </columns>
             </TableView>
+
+            <TableView fx:id="tblClientes" visible="false" managed="false">
+               <columns>
+                  <TableColumn fx:id="colCliCedula" prefWidth="100.0" text="%reportes.col.cedula" />
+                  <TableColumn fx:id="colCliNombres" prefWidth="200.0" text="%reportes.col.nombre" />
+                  <TableColumn fx:id="colCliTelefono" prefWidth="110.0" text="%reportes.col.telefono" />
+                  <TableColumn fx:id="colCliCorreo" prefWidth="180.0" text="%reportes.col.correo" />
+                  <TableColumn fx:id="colCliDireccion" prefWidth="200.0" text="%reportes.col.direccion" />
+               </columns>
+            </TableView>
+
+            <TableView fx:id="tblProductos" visible="false" managed="false">
+               <columns>
+                  <TableColumn fx:id="colProdCodigo" prefWidth="90.0" text="%reportes.col.codigo" />
+                  <TableColumn fx:id="colProdNombre" prefWidth="220.0" text="%reportes.col.nombre" />
+                  <TableColumn fx:id="colProdPrecioCompra" prefWidth="100.0" text="%reportes.col.precioCompra" />
+                  <TableColumn fx:id="colProdPvpMenor" prefWidth="100.0" text="%reportes.col.pvpMenor" />
+                  <TableColumn fx:id="colProdPvpMayor" prefWidth="100.0" text="%reportes.col.pvpMayor" />
+                  <TableColumn fx:id="colProdStock" prefWidth="90.0" text="%reportes.col.stock" />
+                  <TableColumn fx:id="colProdIva" prefWidth="100.0" text="%reportes.col.aplicaIva" />
+               </columns>
+            </TableView>
          </children>
       </StackPane>
 
       <HBox spacing="10.0" styleClass="footer-bar">
          <children>
+            <Button fx:id="btn_reintentarSri" text="%reportes.btnReintentarSri" onAction="#acc_reintentarSri" />
             <Region HBox.hgrow="ALWAYS" />
             <Button text="%reportes.btnExportarPdf" onAction="#acc_exportarPdf" />
-            <Button text="%reportes.btnExportarCsv" onAction="#acc_exportarCsv" />
+            <Button text="%reportes.btnExportarExcel" onAction="#acc_exportarExcel" />
          </children>
       </HBox>
    </children>

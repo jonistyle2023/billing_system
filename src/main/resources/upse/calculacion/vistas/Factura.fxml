@@ -126,6 +126,8 @@
                           style="-fx-background-color: #e74c3c;" />
                   <Button fx:id="btn_anular"       mnemonicParsing="false" onAction="#acc_anular"       text="%factura.btnAnular"
                           style="-fx-background-color: #e67e22;" />
+                  <Button fx:id="btn_imprimir"     mnemonicParsing="false" onAction="#acc_imprimir"     text="%factura.btnImprimir"
+                          style="-fx-background-color: #2980b9;" />
                   <Button fx:id="btn_nuevo"        mnemonicParsing="false" onAction="#acc_nuevo"        text="%factura.btnNuevo"
                           style="-fx-background-color: #27ae60;" />
                </children>
